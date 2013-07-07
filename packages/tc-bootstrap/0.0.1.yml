@@ -1,0 +1,80 @@
+---
+package:
+    name: tc-bootstrap
+    description: Toolchain Bootstrap
+    version: 0.0.1
+
+sources:
+    - file: gmp-5.1.2.tar.xz
+      digest: sha1:980426a6ef54d4fff2e67ab970a432251ee2c3a1
+      origins:
+        - http://ftpmirror.gnu.org/gmp/gmp-5.1.2.tar.xz
+    - file: mpfr-3.1.2.tar.xz
+      digest: sha1:03e593cc6e26639ef5e60be1af8dc527209e5172
+      origins:
+        - http://ftpmirror.gnu.org/mpfr/mpfr-3.1.2.tar.xz
+    - file: mpc-1.0.1.tar.gz
+      digest: sha1:8c7e19ad0dd9b3b5cc652273403423d6cf0c5edf
+      origins:
+        - http://ftpmirror.gnu.org/mpc/mpc-1.0.1.tar.gz
+    - file: binutils-2.23.2.tar.bz2
+      digest: sha1:042c51073205ebaf88c272d6168f9deb71984b56
+      origins:
+        - http://ftpmirror.gnu.org/binutils/binutils-2.23.2.tar.bz2
+    - file: gcc-4.8.1.tar.bz2
+      digest: sha1:4e655032cda30e1928fcc3f00962f4238b502169
+      origins:
+        - http://ftpmirror.gnu.org/gcc/gcc-4.8.1/gcc-4.8.1.tar.bz2
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/gmp-5.1.2.tar.xz
+        - tar Jxf $_SRCDIR/mpfr-3.1.2.tar.xz
+        - tar zxf $_SRCDIR/mpc-1.0.1.tar.gz
+        - tar jxf $_SRCDIR/binutils-2.23.2.tar.bz2
+        - tar jxf $_SRCDIR/gcc-4.8.1.tar.bz2
+        - mkdir -p gmp mpfr mpc binutils gcc
+    
+    - workdir: gmp
+      commands:
+        - ../gmp-5.1.2/configure --prefix=$_RELDIR --disable-shared
+        - make
+        - make install
+    
+    - workdir: mpfr
+      commands:
+        - ../mpfr-3.1.2/configure --prefix=$_RELDIR --disable-shared --with-gmp=$_RELDIR
+        - make
+        - make install
+    
+    - workdir: mpc
+      commands:
+        - ../mpc-1.0.1/configure --prefix=$_RELDIR --disable-shared --with-gmp=$_RELDIR --with-mpfr=$_RELDIR
+        - make
+        - make install
+    
+    - workdir: binutils
+      commands:
+        - ../binutils-2.23.2/configure --prefix=$_RELDIR --target=x86_64-elf --disable-nls --with-gmp=$_RELDIR --with-mpfr=$_RELDIR --with-mpc=$_RELDIR
+        - make
+        - make install
+    
+    - workdir: gcc
+      commands:
+        - >
+            ../gcc-4.8.1/configure --prefix=$_RELDIR --target=x86_64-elf
+            --enable-languages=c --without-headers --with-gmp=$_RELDIR --with-mpfr=$_RELDIR --with-mpc=$_RELDIR
+            --disable-nls
+            --disable-shared
+            --disable-multilib
+            --disable-decimal-float
+            --disable-threads
+            --disable-libatomic
+            --disable-libgomp
+            --disable-libitm
+            --disable-libmudflap
+            --disable-libquadmath
+            --disable-libsanitizer
+            --disable-libssp
+        - make
+        - make install
