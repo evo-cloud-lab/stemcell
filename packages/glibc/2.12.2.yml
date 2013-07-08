@@ -19,7 +19,7 @@ build:
     
     - workdir: glibc
       commands:
-        - CFLAGS="-O2 -U_FORTIFY_SOURCE -fno-stack-protector" ../glibc-2.12.2/configure --prefix=/usr --with-headers=$_RELBASE/$_DEP_KERNEL_HEADERS/include --enable-add-ons --enable-kernel=2.6.0 --disable-profile --host=x86_64-linux
+        - CFLAGS="-O2 -U_FORTIFY_SOURCE -fno-stack-protector" ../glibc-2.12.2/configure --prefix=/usr --with-headers=$_RELBASE/$_DEP_KERNEL_HEADERS/include --enable-add-ons --enable-kernel=2.6.30 --disable-profile --host=x86_64-linux
         - make
         - make install install_root=$_RELDIR
         - cp -r $_RELBASE/$_DEP_KERNEL_HEADERS/include/* $_RELDIR/usr/include/

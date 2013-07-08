@@ -1,0 +1,22 @@
+---
+package:
+    name: syslinux
+    description: Linux Bootloader
+    version: 6.1.0
+
+sources:
+    - file: syslinux-6.01.tar.xz
+      digest: sha1:d7bc1b188677f77ac2d7060d25491dc29877a9c4
+      origins:
+        - https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.01.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/syslinux-6.01.tar.xz
+    
+    - workdir: syslinux-6.01
+      commands:
+        - make bios install INSTALLROOT=$_RELDIR
+
+# require nasm
+# require ia32 gnu-efi header files for efi32
