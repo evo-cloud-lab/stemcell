@@ -16,7 +16,8 @@ build:
     
     - workdir: syslinux-6.01
       commands:
-        - make bios install INSTALLROOT=$_RELDIR
+        # disable -j as parallel build is broken on syslinux
+        - MAKEFLAGS='' make bios install INSTALLROOT=$_RELDIR
 
 # require nasm
 # require ia32 gnu-efi header files for efi32

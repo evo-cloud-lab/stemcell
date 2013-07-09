@@ -15,14 +15,24 @@ sources:
 build:
     - commands:
         - tar jxf $_SRCDIR/busybox-1.21.1.tar.bz2
-        - mkdir -p busybox
-        - make -C busybox-1.21.1 defconfig O=$_BLDDIR/busybox
+        - mkdir -p busybox-full busybox-initrd
+        - make -C busybox-1.21.1 defconfig O=$_BLDDIR/busybox-full
+        - make -C busybox-1.21.1 defconfig O=$_BLDDIR/busybox-initrd
     
-    - workdir: busybox
+    - workdir: busybox-full
       commands:
         - cp -f $_PKGDIR/config-1.21.1 .config
         - sed -i -r "s|^(CONFIG_SYSROOT=).*$|\\1\"$_RELBASE/$_DEP_GLIBC\"|" .config
-        - sed -i -r "s|^(CONFIG_PREFIX=).*$|\\1\"$_RELDIR\"|" .config
+        - sed -i -r "s|^(CONFIG_PREFIX=).*$|\\1\"$_RELDIR/full\"|" .config
+        - make oldconfig
+        - make V=1
+        - make install
+
+    - workdir: busybox-initrd
+      commands:
+        - cp -f $_PKGDIR/config-1.21.1-initrd .config
+        - sed -i -r "s|^(CONFIG_SYSROOT=).*$|\\1\"$_RELBASE/$_DEP_GLIBC\"|" .config
+        - sed -i -r "s|^(CONFIG_PREFIX=).*$|\\1\"$_RELDIR/initrd\"|" .config
         - make oldconfig
         - make V=1
         - make install
