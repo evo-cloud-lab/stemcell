@@ -1,0 +1,52 @@
+---
+package:
+    name: tc-elf
+    description: ELF Toolchain
+    version: 0.0.1
+    dependencies:
+        - tc-deps
+
+sources:
+    - file: binutils-2.23.2.tar.bz2
+      digest: sha1:042c51073205ebaf88c272d6168f9deb71984b56
+      origins:
+        - http://ftpmirror.gnu.org/binutils/binutils-2.23.2.tar.bz2
+    - file: gcc-4.8.1.tar.bz2
+      digest: sha1:4e655032cda30e1928fcc3f00962f4238b502169
+      origins:
+        - http://ftpmirror.gnu.org/gcc/gcc-4.8.1/gcc-4.8.1.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/binutils-2.23.2.tar.bz2
+        - tar jxf $_SRCDIR/gcc-4.8.1.tar.bz2
+        - mkdir -p binutils gcc
+    
+    - workdir: binutils
+      commands:
+        - >
+            ../binutils-2.23.2/configure --prefix=$_RELDIR --target=x86_64-elf
+            --with-gmp=$_RELBASE/$_DEP_TC_DEPS --with-mpfr=$_RELBASE/$_DEP_TC_DEPS --with-mpc=$_RELBASE/$_DEP_TC_DEPS
+            --disable-nls 
+        - make
+        - make install
+    
+    - workdir: gcc
+      commands:
+        - >
+            ../gcc-4.8.1/configure --prefix=$_RELDIR --target=x86_64-elf
+            --enable-languages=c --without-headers --with-tune=generic
+            --with-gmp=$_RELBASE/$_DEP_TC_DEPS --with-mpfr=$_RELBASE/$_DEP_TC_DEPS --with-mpc=$_RELBASE/$_DEP_TC_DEPS
+            --disable-nls
+            --disable-shared
+            --disable-multilib
+            --disable-threads
+            --disable-libatomic
+            --disable-libgomp
+            --disable-libitm
+            --disable-libmudflap
+            --disable-libquadmath
+            --disable-libsanitizer
+            --disable-libssp
+        - make
+        - make install

@@ -1,0 +1,49 @@
+---
+package:
+    name: tc-linux
+    description: Linux Toolchain
+    version: 0.0.1
+    dependencies:
+        - tc-deps
+        - glibc: "~2.12"
+
+sources:
+    - file: binutils-2.23.2.tar.bz2
+      digest: sha1:042c51073205ebaf88c272d6168f9deb71984b56
+      origins:
+        - http://ftpmirror.gnu.org/binutils/binutils-2.23.2.tar.bz2
+    - file: gcc-4.8.1.tar.bz2
+      digest: sha1:4e655032cda30e1928fcc3f00962f4238b502169
+      origins:
+        - http://ftpmirror.gnu.org/gcc/gcc-4.8.1/gcc-4.8.1.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/binutils-2.23.2.tar.bz2
+        - tar jxf $_SRCDIR/gcc-4.8.1.tar.bz2
+        - mkdir -p binutils gcc
+    
+    - workdir: binutils
+      commands:
+        - >
+            ../binutils-2.23.2/configure --prefix=$_RELDIR --target=x86_64-linux
+            --with-sysroot=$_RELBASE/$_DEP_GLIBC
+            --with-gmp=$_RELBASE/$_DEP_TC_DEPS --with-mpfr=$_RELBASE/$_DEP_TC_DEPS --with-mpc=$_RELBASE/$_DEP_TC_DEPS            
+            --disable-nls 
+        - make
+        - make install
+    
+    - workdir: gcc
+      commands:
+        - >
+            ../gcc-4.8.1/configure --prefix=$_RELDIR --target=x86_64-linux
+            --with-sysroot=$_RELBASE/$_DEP_GLIBC
+            --with-gmp=$_RELBASE/$_DEP_TC_DEPS --with-mpfr=$_RELBASE/$_DEP_TC_DEPS --with-mpc=$_RELBASE/$_DEP_TC_DEPS
+            --disable-nls
+            --enable-languages=c,c++
+            --disable-multilib
+        - cp $_RELBASE/$_DEP_GLIBC/usr/lib64/crti.o $_RELDIR/x86_64-linux/lib/
+        - cp $_RELBASE/$_DEP_GLIBC/usr/lib64/crtn.o $_RELDIR/x86_64-linux/lib/
+        - cp $_RELBASE/$_DEP_GLIBC/usr/lib64/crt1.o $_RELDIR/x86_64-linux/lib/        
+        - make
+        - make install

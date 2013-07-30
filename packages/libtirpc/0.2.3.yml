@@ -1,0 +1,25 @@
+---
+package:
+    name: libtirpc
+    description: TI RPC
+    version: 0.2.3
+    dependencies:
+        - tc-linux
+        - glibc217
+
+sources:
+    - file: libtirpc-0.2.3.tar.bz2
+      digest: sha1:7076d09762d11742de6d1b3d7162ee1e86d0b555
+      origins:
+        - http://downloads.sourceforge.net/project/libtirpc/libtirpc/0.2.3/libtirpc-0.2.3.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/libtirpc-0.2.3.tar.bz2
+        - mkdir libtirpc
+    
+    - workdir: libtirpc
+      commands:
+        - PATH="$_DEP_TC_LINUX/bin:$PATH" ../libtirpc-0.2.3/configure --build=x86_64-linux --host=x86_64-linux --prefix=/usr
+        - make
+        - make install DESTDIR=$_RELDIR

@@ -1,7 +1,7 @@
 ---
 package:
-    name: busybox
-    description: Busybox
+    name: busybox-initrd
+    description: Busybox for initrd
     version: 1.21.1
     dependencies:
         - tc-linux
@@ -24,7 +24,7 @@ build:
         - cp -f $_PKGDIR/config-1.21.1 .config
         - sed -i -r "s|^(CONFIG_SYSROOT=).*$|\\1\"$_RELBASE/$_DEP_GLIBC\"|" .config
         - sed -i -r "s|^(CONFIG_PREFIX=).*$|\\1\"$_RELDIR\"|" .config
-        - sed -i -r "s|^(CONFIG_CROSS_COMPILER_PREFIX=).*$|\\1\"$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-\"|" .config
+        - sed -i -r "s|^(CONFIG_CROSS_COMPILER_PREFIX=).*$|\\1\"$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-\"|" .config        
         - make oldconfig
         - make V=1
         - make install

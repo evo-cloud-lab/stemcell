@@ -1,0 +1,44 @@
+---
+package:
+    name: tc-deps
+    description: Toolchain Dependencies
+    version: 0.0.1
+
+sources:
+    - file: gmp-5.1.2.tar.xz
+      digest: sha1:980426a6ef54d4fff2e67ab970a432251ee2c3a1
+      origins:
+        - http://ftpmirror.gnu.org/gmp/gmp-5.1.2.tar.xz
+    - file: mpfr-3.1.2.tar.xz
+      digest: sha1:03e593cc6e26639ef5e60be1af8dc527209e5172
+      origins:
+        - http://ftpmirror.gnu.org/mpfr/mpfr-3.1.2.tar.xz
+    - file: mpc-1.0.1.tar.gz
+      digest: sha1:8c7e19ad0dd9b3b5cc652273403423d6cf0c5edf
+      origins:
+        - http://ftpmirror.gnu.org/mpc/mpc-1.0.1.tar.gz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/gmp-5.1.2.tar.xz
+        - tar Jxf $_SRCDIR/mpfr-3.1.2.tar.xz
+        - tar zxf $_SRCDIR/mpc-1.0.1.tar.gz
+        - mkdir -p gmp mpfr mpc
+    
+    - workdir: gmp
+      commands:
+        - ../gmp-5.1.2/configure --prefix=$_RELDIR --disable-shared
+        - make
+        - make install
+    
+    - workdir: mpfr
+      commands:
+        - ../mpfr-3.1.2/configure --prefix=$_RELDIR --disable-shared --with-gmp=$_RELDIR
+        - make
+        - make install
+    
+    - workdir: mpc
+      commands:
+        - ../mpc-1.0.1/configure --prefix=$_RELDIR --disable-shared --with-gmp=$_RELDIR --with-mpfr=$_RELDIR
+        - make
+        - make install

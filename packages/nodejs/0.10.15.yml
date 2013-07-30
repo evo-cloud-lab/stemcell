@@ -1,0 +1,23 @@
+---
+package:
+    name: nodejs
+    description: Node.js Runtime
+    version: 0.10.15
+    dependencies:
+        - tc-linux
+        - glibc: "~2.12"
+
+sources:
+    - file: node-v0.10.15.tar.gz
+      digest: sha1:14174896de074c244b0ed2251a95d7163d5a5e87
+      origins:
+        - http://nodejs.org/dist/v0.10.15/node-v0.10.15.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/node-v0.10.15.tar.gz
+    
+    - workdir: node-v0.10.15
+      commands:
+        - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" ./configure --prefix=/usr --dest-cpu=x64 --dest-os=linux
+        - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" CFLAGS="--sysroot=$_RELBASE/$_DEP_GLIBC" make install DESTDIR=$_RELDIR
