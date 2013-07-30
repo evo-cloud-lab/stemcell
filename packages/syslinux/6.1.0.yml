@@ -3,6 +3,9 @@ package:
     name: syslinux
     description: Linux Bootloader
     version: 6.1.0
+    dependencies:
+        - tc-linux
+        - nasm
 
 sources:
     - file: syslinux-6.01.tar.xz
@@ -17,7 +20,9 @@ build:
     - workdir: syslinux-6.01
       commands:
         # disable -j as parallel build is broken on syslinux
-        - MAKEFLAGS='' make bios install INSTALLROOT=$_RELDIR
+        - >
+            PATH="$_RELBASE/$_DEP_NASM/bin:$PATH"
+            CC=$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc
+            MAKEFLAGS='' make bios install INSTALLROOT=$_RELDIR
 
-# require nasm
-# require ia32 gnu-efi header files for efi32
+# for efi32, require ia32 gnu-efi header files for efi32

@@ -1,0 +1,21 @@
+---
+package:
+    name: nasm
+    description: Netwide Assembler
+    version: 2.10.9
+
+sources:
+    - file: nasm-2.10.09.tar.xz
+      digest: sha1:062dd7315b307870917e708a96b6862481cefc54
+      origins:
+        - http://www.nasm.us/pub/nasm/releasebuilds/2.10.09/nasm-2.10.09.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/nasm-2.10.09.tar.xz
+    
+    - workdir: nasm-2.10.09
+      commands:
+        - ./configure --prefix=$_RELDIR
+        - make
+        - make install
