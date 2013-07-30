@@ -1,0 +1,28 @@
+---
+package:
+    name: mpfr
+    version: 3.1.2
+    dependencies:
+        - tc-linux
+        - gmp: ">=4.1.0"
+
+sources:
+    - file: mpfr-3.1.2.tar.xz
+      digest: sha1:03e593cc6e26639ef5e60be1af8dc527209e5172
+      origins:
+        - http://ftpmirror.gnu.org/mpfr/mpfr-3.1.2.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/mpfr-3.1.2.tar.xz
+        - mkdir -p build
+    
+    - workdir: build
+      commands:
+        - >
+            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"
+            ../mpfr-3.1.2/configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --with-gmp=$_RELBASE/$_DEP_GMP/usr
+            --disable-shared
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
+        - -rm -f $_RELDIR/usr/lib/libmpfr.la

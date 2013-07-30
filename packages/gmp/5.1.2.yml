@@ -1,0 +1,26 @@
+---
+package:
+    name: gmp
+    version: 5.1.2
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: gmp-5.1.2.tar.xz
+      digest: sha1:980426a6ef54d4fff2e67ab970a432251ee2c3a1
+      origins:
+        - http://ftpmirror.gnu.org/gmp/gmp-5.1.2.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/gmp-5.1.2.tar.xz
+        - mkdir -p build
+    
+    - workdir: build
+      commands:
+        - >
+            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"
+            ../gmp-5.1.2/configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --disable-shared
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
+        - -rm -f $_RELDIR/usr/lib/libgmp.la

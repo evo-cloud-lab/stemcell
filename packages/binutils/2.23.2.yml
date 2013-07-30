@@ -1,0 +1,34 @@
+---
+package:
+    name: binutils
+    description: GNU binutils
+    version: 2.23.2
+    dependencies:
+        - tc-linux
+        - gmp
+        - mpfr
+        - mpc
+
+sources:
+    - file: binutils-2.23.2.tar.bz2
+      digest: sha1:042c51073205ebaf88c272d6168f9deb71984b56
+      origins:
+        - http://ftpmirror.gnu.org/binutils/binutils-2.23.2/binutils-2.23.2.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/binutils-2.23.2.tar.bz2
+        - mkdir -p build
+    
+    - workdir: build
+      commands:
+        - >
+            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"
+            ../binutils-2.23.2/configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --with-sysroot=/
+            --with-gmp=$_RELBASE/$_DEP_GMP/usr
+            --with-mpfr=$_RELBASE/$_DEP_MPFR/usr
+            --with-mpc=$_RELBASE/$_DEP_MPC/usr
+            --disable-nls
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
