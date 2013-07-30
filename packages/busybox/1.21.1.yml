@@ -5,7 +5,7 @@ package:
     version: 1.21.1
     dependencies:
         - tc-linux
-        - glibc: "~2.12"
+        - libtirpc
 
 sources:
     - file: busybox-1.21.1.tar.bz2
@@ -22,9 +22,11 @@ build:
     - workdir: busybox
       commands:
         - cp -f $_PKGDIR/config-1.21.1 .config
-        - sed -i -r "s|^(CONFIG_SYSROOT=).*$|\\1\"$_RELBASE/$_DEP_GLIBC\"|" .config
         - sed -i -r "s|^(CONFIG_PREFIX=).*$|\\1\"$_RELDIR\"|" .config
         - sed -i -r "s|^(CONFIG_CROSS_COMPILER_PREFIX=).*$|\\1\"$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-\"|" .config
+        - sed -i -r "s|^(CONFIG_EXTRA_CFLAGS=).*$|\\1\"-I$_RELBASE/$_DEP_LIBTIRPC/usr/include/tirpc\"|" .config
+        - sed -i -r "s|^(CONFIG_EXTRA_LDFLAGS=).*$|\\1\"-L$_RELBASE/$_DEP_LIBTIRPC/usr/lib\"|" .config
+        - sed -i -r "s|^(CONFIG_EXTRA_LDLIBS=).*$|\\1\"tirpc\"|" .config        
         - make oldconfig
         - make V=1
         - make install

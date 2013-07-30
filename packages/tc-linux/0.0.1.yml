@@ -5,7 +5,7 @@ package:
     version: 0.0.1
     dependencies:
         - tc-deps
-        - glibc: "~2.12"
+        - glibc: "~2.17"
 
 sources:
     - file: binutils-2.23.2.tar.bz2

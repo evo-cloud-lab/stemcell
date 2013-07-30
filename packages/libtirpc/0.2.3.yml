@@ -5,7 +5,6 @@ package:
     version: 0.2.3
     dependencies:
         - tc-linux
-        - glibc217
 
 sources:
     - file: libtirpc-0.2.3.tar.bz2

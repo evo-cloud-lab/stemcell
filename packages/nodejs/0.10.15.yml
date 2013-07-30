@@ -5,7 +5,6 @@ package:
     version: 0.10.15
     dependencies:
         - tc-linux
-        - glibc: "~2.12"
 
 sources:
     - file: node-v0.10.15.tar.gz
@@ -20,4 +19,4 @@ build:
     - workdir: node-v0.10.15
       commands:
         - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" ./configure --prefix=/usr --dest-cpu=x64 --dest-os=linux
-        - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" CFLAGS="--sysroot=$_RELBASE/$_DEP_GLIBC" make install DESTDIR=$_RELDIR
+        - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" make install DESTDIR=$_RELDIR
