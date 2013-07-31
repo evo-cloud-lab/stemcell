@@ -1,0 +1,26 @@
+---
+package:
+    name: rootfs-dev
+    description: Root file system for development
+    version: 0.0.1
+    dependencies:
+        - glibc
+        - libtirpc
+        - busybox
+        - nodejs
+        - binutils
+        - gcc
+        - syslinux
+        - tc-squashfs
+
+build:
+    - commands:
+        - mkdir -p $_RELDIR/root
+        - cp -a $_RELBASE/$_DEP_GLIBC/*     $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_LIBTIRPC/*  $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_BUSYBOX/*   $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_NODEJS/*    $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_BINUTILS/*  $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_GCC/*       $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_SYSLINUX/*  $_RELDIR/root/
+        - $_RELBASE/$_DEP_TC_SQUASHFS/mksquashfs $_RELDIR/root $_RELDIR/rootfs-dev.squashfs -comp xz -no-xattrs -all-root -noappend -no-progress

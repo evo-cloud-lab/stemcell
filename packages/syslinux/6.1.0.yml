@@ -5,7 +5,7 @@ package:
     version: 6.1.0
     dependencies:
         - tc-linux
-        - nasm
+        - tc-nasm
 
 sources:
     - file: syslinux-6.01.tar.xz
@@ -21,7 +21,7 @@ build:
       commands:
         # disable -j as parallel build is broken on syslinux
         - >
-            PATH="$_RELBASE/$_DEP_NASM/bin:$PATH"
+            PATH="$_RELBASE/$_DEP_TC_NASM/bin:$PATH"
             CC=$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc
             MAKEFLAGS='' make bios install INSTALLROOT=$_RELDIR
 

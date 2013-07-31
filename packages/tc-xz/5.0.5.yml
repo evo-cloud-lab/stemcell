@@ -1,0 +1,21 @@
+---
+package:
+    name: tc-xz
+    description: XZ Utils
+    version: 5.0.5
+
+sources:
+    - file: xz-5.0.5.tar.xz
+      digest: sha1:56f1d78117f0c32bbb1cfd40117aa7f55bee8765
+      origins:
+        - http://tukaani.org/xz/xz-5.0.5.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/xz-5.0.5.tar.xz
+    
+    - workdir: xz-5.0.5
+      commands:
+        - ./configure --prefix=$_RELDIR --disable-shared
+        - make
+        - make install

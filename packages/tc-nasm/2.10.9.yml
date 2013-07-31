@@ -1,6 +1,6 @@
 ---
 package:
-    name: nasm
+    name: tc-nasm
     description: Netwide Assembler
     version: 2.10.9
 
