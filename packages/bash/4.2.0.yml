@@ -10,7 +10,7 @@ sources:
     - file: bash-4.2.tar.gz
       digest: sha1:487840ab7134eb7901fbb2e49b0ee3d22de15cb8
       origins:
-        - http://someplace/bash-4.2.tar.gz
+        - http://ftpmirror.gnu.org/bash/bash-4.2.tar.gz
       
 build:
     - commands:
