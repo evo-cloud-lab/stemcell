@@ -22,3 +22,8 @@ build:
         - PATH="$_DEP_TC_LINUX/bin:$PATH" ../libtirpc-0.2.3/configure --build=x86_64-linux --host=x86_64-linux --prefix=/usr
         - make
         - make install DESTDIR=$_RELDIR
+        - rm -f $_RELDIR/usr/lib/libtirpc.la
+        - mkdir -p $_RELDIR/lib64
+        - ln -sf ../usr/lib/libtirpc.so.1.0.10 $_RELDIR/lib64/
+        - ln -sf ../usr/lib/libtirpc.so.1.0.10 $_RELDIR/lib64/libtirpc.so.1
+        - ln -sf ../usr/lib/libtirpc.so.1.0.10 $_RELDIR/lib64/libtirpc.so

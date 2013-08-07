@@ -1,0 +1,22 @@
+---
+package:
+    name: e2fsprogs
+    description: Ext2/3/4 file system programs
+    version: 1.42.8
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: e2fsprogs-1.42.8.tar.xz
+      digest: sha1:f2b129c8bf388233c566c65898167cb4cadfc8d2
+      origins:
+        - https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v1.42.8/e2fsprogs-1.42.8.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/e2fsprogs-1.42.8.tar.xz
+    
+    - workdir: e2fsprogs-1.42.8
+      commands:
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR

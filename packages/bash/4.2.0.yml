@@ -1,0 +1,24 @@
+---
+package:
+    name: bash
+    description: Shell
+    version: 4.2.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: bash-4.2.tar.gz
+      digest: sha1:487840ab7134eb7901fbb2e49b0ee3d22de15cb8
+      origins:
+        - http://someplace/bash-4.2.tar.gz
+      
+build:
+    - commands:
+        - tar zxf $_SRCDIR/bash-4.2.tar.gz
+    
+    - workdir: bash-4.2
+      commands:
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
+        - mkdir -p $_RELDIR/bin
+        - ln -sf ../usr/bin/bash $_RELDIR/bin
