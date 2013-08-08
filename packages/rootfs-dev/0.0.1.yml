@@ -6,6 +6,9 @@ package:
     dependencies:
         - glibc
         - libtirpc
+        - zlib
+        - openssl
+        - openssh
         - busybox
         - e2fsprogs
         - nodejs
@@ -21,6 +24,9 @@ build:
         - mkdir -p $_RELDIR/root
         - cp -a $_RELBASE/$_DEP_GLIBC/*     $_RELDIR/root/
         - cp -a $_RELBASE/$_DEP_LIBTIRPC/*  $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_ZLIB/*      $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_OPENSSL/*   $_RELDIR/root/
+        - cp -a $_RELBASE/$_DEP_OPENSSH/*   $_RELDIR/root/
         - cp -a $_RELBASE/$_DEP_BUSYBOX/*   $_RELDIR/root/
         - cp -a $_RELBASE/$_DEP_E2FSPROGS/* $_RELDIR/root/
         - cp -a $_RELBASE/$_DEP_NODEJS/*    $_RELDIR/root/
@@ -28,6 +34,9 @@ build:
         - cp -a $_RELBASE/$_DEP_GCC/*       $_RELDIR/root/
         - cp -a $_RELBASE/$_DEP_SYSLINUX/*  $_RELDIR/root/
         - cp -a $_RELBASE/$_DEP_BASH/*      $_RELDIR/root/
+        - mv -f $_RELDIR/root/usr/lib/* $_RELDIR/root/usr/lib64/
+        - rmdir $_RELDIR/root/usr/lib
+        - ln -s lib64 $_RELDIR/root/usr/lib
         - >
             fakeroot $SHELL -c '
             tar -C $_RELDIR/root -xf $_RELBASE/$_DEP_BASEFS/rootfs.tar ;

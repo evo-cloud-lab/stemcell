@@ -1,0 +1,28 @@
+---
+package:
+    name: openssh
+    description: Open Secure Shell
+    version: 6.2.0
+    dependencies:
+        - tc-linux
+        - openssl
+        - zlib
+
+sources:
+    - file: openssh-6.2p2.tar.gz
+      digest: sha1:c2b4909eba6f5ec6f9f75866c202db47f3b501ba
+      origins:
+        - http://openbsd.mirrors.pair.com/OpenSSH/portable/openssh-6.2p2.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/openssh-6.2p2.tar.gz
+    
+    - workdir: openssh-6.2p2
+      commands:
+        - >
+            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --with-zlib=$_RELBASE/$_DEP_ZLIB/usr
+            --with-ssl-dir=$_RELBASE/$_DEP_OPENSSL/usr --without-openssl-header-check
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR

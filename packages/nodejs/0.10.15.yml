@@ -5,6 +5,8 @@ package:
     version: 0.10.15
     dependencies:
         - tc-linux
+        - openssl
+        - zlib
 
 sources:
     - file: node-v0.10.15.tar.gz
@@ -18,5 +20,13 @@ build:
     
     - workdir: node-v0.10.15
       commands:
-        - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" ./configure --prefix=/usr --dest-cpu=x64 --dest-os=linux
+        - >
+            CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc"
+            ./configure --prefix=/usr --dest-cpu=x64 --dest-os=linux
+            --shared-zlib
+            --shared-zlib-includes=$_RELBASE/$_DEP_ZLIB/usr/include
+            --shared-zlib-libpath=$_RELBASE/$_DEP_ZLIB/usr/lib
+            --shared-openssl
+            --shared-openssl-includes=$_RELBASE/$_DEP_OPENSSL/usr/include
+            --shared-openssl-libpath=$_RELBASE/$_DEP_OPENSSL/usr/lib
         - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" make install DESTDIR=$_RELDIR

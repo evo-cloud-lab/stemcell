@@ -1,0 +1,30 @@
+---
+package:
+    name: openssl
+    version: 1.0.1+e
+    dependencies:
+        - tc-linux
+        - zlib
+
+sources:
+    - file: openssl-1.0.1e.tar.gz
+      digest: sha1:3f1b1223c9e8189bfe4e186d86449775bd903460
+      origins:
+        - http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/openssl-1.0.1e.tar.gz
+    
+    - workdir: openssl-1.0.1e
+      commands:
+        - >
+            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"
+            CC=x86_64-linux-gcc
+            AR=x86_64-linux-ar
+            RANLIB=x86_64-linux-ranlib
+            ./config --prefix=/usr threads zlib shared
+            -I$_RELBASE/$_DEP_ZLIB/usr/include
+            -L$_RELBASE/$_DEP_ZLIB/usr/lib
+            -lz
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install INSTALL_PREFIX=$_RELDIR

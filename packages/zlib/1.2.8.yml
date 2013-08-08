@@ -1,0 +1,22 @@
+---
+package:
+    name: zlib
+    description: A Massively Spiffy Yet Delicately Unobtrusive Compression Library
+    version: 1.2.8
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: zlib-1.2.8.tar.gz
+      digest: sha1:a4d316c404ff54ca545ea71a27af7dbc29817088
+      origins:
+        - http://zlib.net/zlib-1.2.8.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/zlib-1.2.8.tar.gz
+    
+    - workdir: zlib-1.2.8
+      commands:
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" CC=x86_64-linux-gcc ./configure --prefix=/usr
+        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
