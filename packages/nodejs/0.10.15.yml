@@ -19,9 +19,13 @@ build:
         - tar zxf $_SRCDIR/node-v0.10.15.tar.gz
     
     - workdir: node-v0.10.15
+      env:
+        CC: x86_64-linux-gcc
+      paths:
+        - dep: tc-linux
+          dir: bin
       commands:
         - >
-            CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc"
             ./configure --prefix=/usr --dest-cpu=x64 --dest-os=linux
             --shared-zlib
             --shared-zlib-includes=$_RELBASE/$_DEP_ZLIB/usr/include
@@ -29,4 +33,5 @@ build:
             --shared-openssl
             --shared-openssl-includes=$_RELBASE/$_DEP_OPENSSL/usr/include
             --shared-openssl-libpath=$_RELBASE/$_DEP_OPENSSL/usr/lib
-        - CC="$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc" make install DESTDIR=$_RELDIR
+        - make
+        - make install DESTDIR=$_RELDIR

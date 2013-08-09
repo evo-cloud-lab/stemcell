@@ -9,6 +9,9 @@ sources:
       digest: sha1:a649d5c15f68ccbae1c4863e357bdc48da4cc0b4
       origins:
         - https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.10.tar.xz
+    
+    - file: config-3.10.0
+      packaged: true
 
 build:
     - commands:

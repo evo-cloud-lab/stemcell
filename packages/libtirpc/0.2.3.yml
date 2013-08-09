@@ -18,8 +18,10 @@ build:
         - mkdir libtirpc
     
     - workdir: libtirpc
+      paths:
+        - dep: tc-linux
+          dir: bin    
       commands:
-        - PATH="$_DEP_TC_LINUX/bin:$PATH" ../libtirpc-0.2.3/configure --build=x86_64-linux --host=x86_64-linux --prefix=/usr
-        - make
+        - ../libtirpc-0.2.3/configure --build=x86_64-linux --host=x86_64-linux --prefix=/usr --without-nsl
         - make install DESTDIR=$_RELDIR
-        - rm -f $_RELDIR/usr/lib/libtirpc.la
+        - -rm -f $_RELDIR/usr/lib/libtirpc.la

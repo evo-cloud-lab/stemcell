@@ -7,15 +7,21 @@ package:
 build:
     - commands:
         - for d in dev proc sys var tmp ; do mkdir -p $_RELDIR/root/$d ; done
-        - >
-            fakeroot $SHELL -c 'for n in 
-            622,console,c,5,1
-            622,mem,c,1,1
-            622,ram0,b,1,0
-            622,ram,b,1,1
-            666,null,c,1,3
-            666,zero,c,1,5
-            666,random,c,1,8
-            666,urandom,c,1,9 ;
-            do eval mknod `echo $n | sed "s/,/ /g" | sed -r "s!^([[:digit:]]+)[[:space:]]!-m \\1 $_RELDIR/root/dev/!"` ;
-            done; tar -C $_RELDIR/root -cf $_RELDIR/rootfs.tar .'
+    
+    - scripts:
+        root.sh: |
+            for n in \
+                622,console,c,5,1   \
+                622,mem,c,1,1       \
+                622,ram0,b,1,0      \
+                622,ram,b,1,1       \
+                666,null,c,1,3      \
+                666,zero,c,1,5      \
+                666,random,c,1,8    \
+                666,urandom,c,1,9
+            do
+                eval mknod `echo $n | sed "s/,/ /g" | sed -r "s!^([[:digit:]]+)[[:space:]]!-m \\1 $_RELDIR/root/dev/!"`
+            done
+            tar -C $_RELDIR/root -cf $_RELDIR/rootfs.tar .
+      commands:
+        - fakeroot $SHELL $_BLDDIR/root.sh

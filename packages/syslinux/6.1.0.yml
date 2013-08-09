@@ -18,10 +18,12 @@ build:
         - tar Jxf $_SRCDIR/syslinux-6.01.tar.xz
     
     - workdir: syslinux-6.01
+      paths:
+        - dep: tc-nasm
+          dir: bin
       commands:
         # disable -j as parallel build is broken on syslinux
         - >
-            PATH="$_RELBASE/$_DEP_TC_NASM/bin:$PATH"
             CC=$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc
             MAKEFLAGS='' make bios install INSTALLROOT=$_RELDIR
 

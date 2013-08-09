@@ -19,16 +19,19 @@ build:
         - mkdir -p glibc
     
     - workdir: glibc
+      paths:
+        - dep: tc-elf
+          dir: bin
       commands:
         - >
             CFLAGS="-O2 -U_FORTIFY_SOURCE -fno-stack-protector"
-            PATH="$_RELBASE/$_DEP_TC_ELF/bin:$PATH"
             ../glibc-2.17/configure --prefix=/usr
             --build=x86_64-elf
             --host=x86_64-linux
             --with-headers=$_RELBASE/$_DEP_KERNEL_HEADERS/include
             --enable-add-ons
             --enable-kernel=2.6.34
+            --enable-obsolete-rpc
             --disable-profile
         - make
         - make install install_root=$_RELDIR

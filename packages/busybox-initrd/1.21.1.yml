@@ -12,6 +12,9 @@ sources:
       origins:
         - http://busybox.net/downloads/busybox-1.21.1.tar.bz2
 
+    - file: config-1.21.1
+      packaged: true
+
 build:
     - commands:
         - tar jxf $_SRCDIR/busybox-1.21.1.tar.bz2

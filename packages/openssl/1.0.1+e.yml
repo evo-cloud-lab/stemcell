@@ -17,9 +17,11 @@ build:
         - tar zxf $_SRCDIR/openssl-1.0.1e.tar.gz
     
     - workdir: openssl-1.0.1e
+      paths:
+        - dep: tc-linux
+          dir: bin    
       commands:
         - >
-            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"
             CC=x86_64-linux-gcc
             AR=x86_64-linux-ar
             RANLIB=x86_64-linux-ranlib
@@ -27,4 +29,5 @@ build:
             -I$_RELBASE/$_DEP_ZLIB/usr/include
             -L$_RELBASE/$_DEP_ZLIB/usr/lib
             -lz
-        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install INSTALL_PREFIX=$_RELDIR
+        - make
+        - make install INSTALL_PREFIX=$_RELDIR

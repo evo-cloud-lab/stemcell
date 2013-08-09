@@ -22,9 +22,11 @@ build:
         - mkdir -p build
     
     - workdir: build
+      paths:
+        - dep: tc-linux
+          dir: bin
       commands:
         - >
-            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"        
             ../gcc-4.8.1/configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
             --with-sysroot=/
             --with-gmp=$_RELBASE/$_DEP_GMP/usr
@@ -32,5 +34,5 @@ build:
             --with-mpc=$_RELBASE/$_DEP_MPC/usr
             --disable-nls
             --enable-languages=c,c++
-        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make
-        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
+        - make
+        - make install DESTDIR=$_RELDIR

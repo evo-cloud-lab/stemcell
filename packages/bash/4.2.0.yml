@@ -17,8 +17,11 @@ build:
         - tar zxf $_SRCDIR/bash-4.2.tar.gz
     
     - workdir: bash-4.2
+      paths:
+        - dep: tc-linux
+          dir: bin
       commands:
-        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
-        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
+        - ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+        - make install DESTDIR=$_RELDIR
         - mkdir -p $_RELDIR/bin
         - ln -sf ../usr/bin/bash $_RELDIR/bin

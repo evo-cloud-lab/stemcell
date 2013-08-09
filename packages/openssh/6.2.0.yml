@@ -19,10 +19,13 @@ build:
         - tar zxf $_SRCDIR/openssh-6.2p2.tar.gz
     
     - workdir: openssh-6.2p2
+      paths:
+        - dep: tc-linux
+          dir: bin    
       commands:
         - >
-            PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH"
             ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
             --with-zlib=$_RELBASE/$_DEP_ZLIB/usr
             --with-ssl-dir=$_RELBASE/$_DEP_OPENSSL/usr --without-openssl-header-check
-        - PATH="$_RELBASE/$_DEP_TC_LINUX/bin:$PATH" make install DESTDIR=$_RELDIR
+        - make
+        - make install DESTDIR=$_RELDIR
