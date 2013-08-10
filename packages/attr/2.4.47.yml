@@ -1,0 +1,30 @@
+---
+package:
+    name: attr
+    description: Utilities to administer the extended attributes on filesystem objects
+    version: 2.4.47
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: attr-2.4.47.src.tar.gz
+      digest: sha1:5060f0062baee6439f41a433325b8b3671f8d2d8
+      origins:
+        - http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/attr-2.4.47.src.tar.gz
+    
+    - workdir: attr-2.4.47
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - >
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --enable-gettext=no
+            --enable-lib64=yes
+        - make
+        - make install install-dev install-lib DESTDIR=$_RELDIR
+        - -rm -f $_RELDIR/usr/lib64/libattr.la

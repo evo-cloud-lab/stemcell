@@ -6,6 +6,10 @@ package:
     dependencies:
         - glibc
         - zlib
+        - attr
+        - libcap
+        - libseccomp
+        - libapparmor
         - openssl
         - openssh
         - busybox
@@ -15,6 +19,7 @@ package:
         - gcc
         - bash
         - syslinux
+        - lxc
         - tc-squashfs
         - basefs
 

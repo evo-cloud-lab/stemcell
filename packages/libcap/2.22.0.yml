@@ -1,0 +1,35 @@
+---
+package:
+    name: libcap
+    description: Library for Kernel Capabilities
+    version: 2.22.0
+    dependencies:
+        - tc-linux
+        - glibc
+        - attr
+
+sources:
+    - file: libcap2_2.22.orig.tar.gz
+      digest: sha1:7753165ca685a0c78735fa0db25b815d9576b1fe
+      origins:
+        - http://ftp.debian.org/debian/pool/main/libc/libcap2/libcap2_2.22.orig.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libcap2_2.22.orig.tar.gz
+    
+    - workdir: libcap-2.22
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - sed -i -r 's/^(CC[[:space:]]+:=).+$/\1 x86_64-linux-gcc/' Make.Rules
+        - sed -i -r 's/^(AR[[:space:]]+:=).+$/\1 x86_64-linux-ar/' Make.Rules
+        - sed -i -r 's/^(RANLIB[[:space:]]+:=).+$/\1 x86_64-linux-ranlib/' Make.Rules
+        - sed -i -r 's/^(DEBUG[[:space:]]+=).+$/\1/' Make.Rules
+        - sed -i -r "s!^(SYSTEM_HEADERS[[:space:]]+=).+\$!\\1 $_RELBASE/$_DEP_GLIBC/usr/include!" Make.Rules
+        - sed -i -r 's/^(PAM_CAP[[:space:]]+:=).+$/\1 no/' Make.Rules
+        - sed -i -r "s!^CFLAGS[[:space:]]+\\+=!CFLAGS += -I$_RELBASE/$_DEP_ATTR/usr/include !" Make.Rules
+        - sed -i -r "s!^LDFLAGS[[:space:]]+\\+=!LDFLAGS += -L$_RELBASE/$_DEP_ATTR/usr/lib64 -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ATTR/usr/lib64 !" Make.Rules
+        - make prefix=/usr
+        - make install RAISE_SETFCAP=no DESTDIR=$_RELDIR

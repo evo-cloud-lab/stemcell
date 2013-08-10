@@ -1,0 +1,35 @@
+---
+package:
+    name: lxc
+    description: Linux Container
+    version: 0.9.0
+    dependencies:
+        - tc-linux
+        - libseccomp
+        - libapparmor
+        - attr
+        - libcap
+
+sources:
+    - file: lxc-0.9.0.tar.gz
+      digest: sha1:863f6375e4b113cb895ca8c252f4da779ee98df7
+      origins:
+        - http://lxc.sourceforge.net/download/lxc/lxc-0.9.0.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/lxc-0.9.0.tar.gz
+    
+    - workdir: lxc-0.9.0
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - >
+            CFLAGS="-I$_RELBASE/$_DEP_LIBSECCOMP/usr/include -I$_RELBASE/$_DEP_LIBAPPARMOR/usr/include -I$_RELBASE/$_DEP_LIBCAP/usr/include"
+            LDFLAGS="-L$_RELBASE/$_DEP_LIBSECCOMP/usr/lib -L$_RELBASE/$_DEP_LIBAPPARMOR/usr/lib -L$_RELBASE/$_DEP_LIBCAP/lib64 -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ATTR/usr/lib64"
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --enable-seccomp
+            --enable-apparmor
+        - make
+        - make install DESTDIR=$_RELDIR

@@ -1,0 +1,29 @@
+---
+package:
+    name: libseccomp
+    description: Linux syscall filtering
+    version: 2.0.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: libseccomp-2.0.0.tar.gz
+      digest: sha1:2bb0e612870de35a0f4514fd878a597ebafcfe53
+      origins:
+        - http://downloads.sourceforge.net/project/libseccomp/libseccomp-2.0.0.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libseccomp-2.0.0.tar.gz
+    
+    - workdir: libseccomp-2.0.0
+      paths:
+        - dep: tc-linux
+          dir: bin
+      env:
+        GCC: x86_64-linux-gcc
+        AR: x86_64-linux-ar
+      commands:
+        - ./configure --prefix=/usr
+        - make V=1
+        - make install DESTDIR=$_RELDIR V=1
