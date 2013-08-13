@@ -1,0 +1,23 @@
+---
+package:
+    name: isoimage
+    description: Stemcell Installation Image
+    version: 0.0.1
+    dependencies:
+        - kernel
+        - initrd
+        - rootfs-dev
+        - syslinux
+
+sources:
+    - file: mkisoimage.sh
+      packaged: true
+
+    - file: isolinux.cfg
+      packaged: true
+
+build:
+    - paths:
+        - dep: tc-squashfs
+      commands:
+        - /bin/bash $_PKGDIR/mkisoimage.sh $_RELBASE/$_DEP_ROOTFS_DEV/rootfs-dev.squashfs

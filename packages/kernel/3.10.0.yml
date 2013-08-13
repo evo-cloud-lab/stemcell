@@ -3,6 +3,8 @@ package:
     name: kernel
     description: Linux kernel
     version: 3.10.0
+    dependencies:
+        - tc-squashfs
 
 sources:
     - file: linux-3.10.tar.xz
@@ -31,4 +33,18 @@ build:
         - make modules V=1
         - make modules_install INSTALL_MOD_PATH=$_RELDIR
         - make firmware_install INSTALL_MOD_PATH=$_RELDIR
-        
+    
+    - workdir: linux
+      paths:
+        - dep: tc-squashfs
+      script: |
+        make modules_install INSTALL_MOD_PATH=$_RELDIR/stripped
+        for m in $(find $_RELDIR/stripped/lib/modules -name '*.ko') ; do
+            strip -g $m
+        done
+
+    - paths:
+        - dep: tc-squashfs
+      commands:
+        - mksquashfs $_RELDIR/stripped/lib/modules $_RELDIR/modules.squashfs -comp xz -no-xattrs -all-root -noappend -no-progress
+        - mksquashfs $_RELDIR/lib/firmware $_RELDIR/firmware.squashfs -comp xz -no-xattrs -all-root -noappend -no-progress

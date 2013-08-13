@@ -7,18 +7,26 @@ package:
 build:
     - commands:
         - for d in dev proc sys var tmp ; do mkdir -p $_RELDIR/root/$d ; done
-    
+        - mkdir -p $_RELDIR/root/lib/modules
+        - mkdir -p $_RELDIR/root/lib/firmware
+
     - scripts:
         root.sh: |
             for n in \
-                622,console,c,5,1   \
-                622,mem,c,1,1       \
-                622,ram0,b,1,0      \
-                622,ram,b,1,1       \
-                666,null,c,1,3      \
-                666,zero,c,1,5      \
-                666,random,c,1,8    \
-                666,urandom,c,1,9
+                622,console,c,5,1               \
+                620,mem,c,1,1                   \
+                622,ram0,b,1,0                  \
+                622,ram1,b,1,1                  \
+                666,null,c,1,3                  \
+                666,zero,c,1,5                  \
+                666,random,c,1,8                \
+                666,urandom,c,1,9               \
+                600,loop-control,c,10,237       \
+                660,loop0,b,7,0                 \
+                660,loop1,b,7,1                 \
+                660,loop2,b,7,2                 \
+                660,loop3,b,7,3                 \
+                660,sr0,b,11,0
             do
                 eval mknod `echo $n | sed "s/,/ /g" | sed -r "s!^([[:digit:]]+)[[:space:]]!-m \\1 $_RELDIR/root/dev/!"`
             done

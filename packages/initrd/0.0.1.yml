@@ -1,0 +1,24 @@
+---
+package:
+    name: initrd
+    description: Init RAM disk
+    version: 0.0.1
+    dependencies:
+        - kernel
+        - busybox-initrd
+        - basefs
+        - tc-xz
+
+sources:
+    - file: mkinitrd.sh
+      packaged: true
+
+    - file: init.sh
+      packaged: true
+      
+    - file: udhcpc-script.sh
+      packaged: true
+
+build:
+    - commands:
+        - fakeroot /bin/bash $_PKGDIR/mkinitrd.sh
