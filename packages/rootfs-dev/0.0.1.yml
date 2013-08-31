@@ -20,13 +20,27 @@ package:
         - bash
         - syslinux
         - lxc
+        - redis
         - tc-squashfs
         - basefs
+
+sources:
+    - file: init.sh
+      packaged: true
+
+    - file: udhcpc-script.sh
+      packaged: true
+      
+    - file: banner.txt
+      packaged: true
+    
+    - file: issue.txt
+      packaged: true
 
 build:
     - script: |
         set -e
-        mkdir -p $_RELDIR/root
+        mkdir -p $_RELDIR/root/etc/init.d
         for dep in $_PKGDEPS ; do
             [ "${dep#tc-}" == "$dep" ] && \
             [ "${dep#basefs-}" == "$dep" ] && \
@@ -35,7 +49,13 @@ build:
         mv -f $_RELDIR/root/usr/lib/* $_RELDIR/root/usr/lib64/
         rmdir $_RELDIR/root/usr/lib
         ln -s lib64 $_RELDIR/root/usr/lib
-    
+        cp $_PKGDIR/init.sh $_RELDIR/root/etc/init.d/rcS
+        chmod a+rx $_RELDIR/root/etc/init.d/rcS
+        cp $_PKGDIR/udhcpc-script.sh $_RELDIR/root/etc/
+        chmod a+rx $_RELDIR/root/etc/udhcpc-script.sh
+        cp $_PKGDIR/banner.txt $_RELDIR/root/etc/banner
+        cp $_PKGDIR/issue.txt $_RELDIR/root/etc/issue
+
     - scripts:
         root.sh: |
             tar -C $_RELDIR/root -xf $_RELBASE/$_DEP_BASEFS/rootfs.tar

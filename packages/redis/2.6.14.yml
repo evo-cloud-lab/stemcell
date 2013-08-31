@@ -1,0 +1,31 @@
+---
+package:
+    name: redis
+    description: Key-value store
+    version: 2.6.14
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: redis-2.6.14.tar.gz
+      digest: sha1:f56a5d4891e94ebd89f7e63c3e9151d1106dedd5
+      origins:
+        - http://redis.googlecode.com/files/redis-2.6.14.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/redis-2.6.14.tar.gz
+    
+    - workdir: redis-2.6.14
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - sed -i -r 's/^STLIB_MAKE_CMD=ar([[:space:]]+.*)$/STLIB_MAKE_CMD=x86_64-linux-ar\1/' deps/hiredis/Makefile
+        - sed -i -r 's/^CC=.*$/CC=x86_64-linux-gcc/' deps/lua/src/Makefile
+        - sed -i -r 's/^AR=.*$/AR=x86_64-linux-ar rcu/' deps/lua/src/Makefile
+        - sed -i -r 's/^RANLIB=.*/RANLIB=x86_64-linux-ranlib/' deps/lua/src/Makefile
+        - sed -i -r 's/^(MKLIB = ).+$/\1x86_64-linux-ar crus $@/' deps/jemalloc/Makefile.in
+        - sed -i -r 's!^([[:space:]]+cd jemalloc && ./configure)[[:space:]]+(.+)$!\1 --prefix=/usr --build=x86_64-linux --host=x86_64-linux \2!' deps/Makefile
+        - CC=x86_64-linux-gcc AR=x86_64-linux-ar RANLIB=x86_64-linux-ranlib make PREFIX=/usr V=1
+        - make install PREFIX=$_RELDIR/usr V=1
