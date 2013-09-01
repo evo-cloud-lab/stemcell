@@ -29,15 +29,6 @@ detect_hw() {
 	done
 }
 
-# setup network
-setup_network() {
-    local interfaces=$(grep -E '^[[:space:]]*eth[[:digit:]]+\:' /proc/net/dev | sed -r 's/^[[:space:]]*(eth[[:digit:]]+)\:.+$/\1/')
-    for interface in $interfaces ; do
-        ifconfig $interface up
-        udhcpc -i $interface -q -s /etc/udhcpc-script.sh -t 5 -f -n
-    done
-}
-
 [ -f /etc/banner ] && cat /etc/banner
 
 # mount default file systems
@@ -53,9 +44,3 @@ mdev -s
 
 # mount fstab
 mount -a
-
-setup_network
-
-while /bin/true ; do
-    /sbin/getty -n -l /bin/sh console 115200 vt100
-done

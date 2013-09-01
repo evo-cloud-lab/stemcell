@@ -10,9 +10,14 @@ package:
         - libcap
         - libseccomp
         - libapparmor
+        - libnih
+        - json-c
+        - expat
+        - dbus
         - openssl
         - openssh
         - busybox
+        - upstart
         - e2fsprogs
         - nodejs
         - binutils
@@ -25,7 +30,25 @@ package:
         - basefs
 
 sources:
-    - file: init.sh
+    - file: startup.sh
+      packaged: true
+
+    - file: startup.conf
+      packaged: true
+      
+    - file: network-init.conf
+      packaged: true
+    
+    - file: network-init.sh
+      packaged: true
+    
+    - file: tty1.conf
+      packaged: true
+    
+    - file: tty2.conf
+      packaged: true
+    
+    - file: tty3.conf
       packaged: true
 
     - file: udhcpc-script.sh
@@ -41,18 +64,33 @@ build:
     - script: |
         set -e
         mkdir -p $_RELDIR/root/etc/init.d
+        mkdir -p $_RELDIR/root/etc/init
+        mkdir -p $_RELDIR/root/etc/scripts
+        
         for dep in $_PKGDEPS ; do
             [ "${dep#tc-}" == "$dep" ] && \
             [ "${dep#basefs-}" == "$dep" ] && \
             cp -a $_RELBASE/$dep/* $_RELDIR/root/
         done
+        # fix /usr/lib as 64-bit system uses /usr/lib64
         mv -f $_RELDIR/root/usr/lib/* $_RELDIR/root/usr/lib64/
         rmdir $_RELDIR/root/usr/lib
         ln -s lib64 $_RELDIR/root/usr/lib
-        cp $_PKGDIR/init.sh $_RELDIR/root/etc/init.d/rcS
-        chmod a+rx $_RELDIR/root/etc/init.d/rcS
-        cp $_PKGDIR/udhcpc-script.sh $_RELDIR/root/etc/
-        chmod a+rx $_RELDIR/root/etc/udhcpc-script.sh
+        
+        # use upstart
+        test -h $_RELDIR/root/linuxrc && rm $_RELDIR/root/linuxrc
+        test -e $_RELDIR/root/sbin/init && rm $_RELDIR/root/sbin/init
+        ln -s /usr/sbin/init $_RELDIR/root/sbin/init
+        mv $_RELDIR/root/usr/etc/dbus-1 $_RELDIR/root/etc/
+        mv $_RELDIR/root/usr/etc/init/rc-sysinit.conf $_RELDIR/root/etc/init/
+        rm -fr $_RELDIR/root/usr/etc
+        
+        # create init script and services
+        cp $_PKGDIR/*.conf $_RELDIR/root/etc/init/
+        cp $_PKGDIR/*.sh $_RELDIR/root/etc/scripts/
+        chmod a+rx $_RELDIR/root/etc/scripts/*.sh
+        
+        # banner and issue
         cp $_PKGDIR/banner.txt $_RELDIR/root/etc/banner
         cp $_PKGDIR/issue.txt $_RELDIR/root/etc/issue
 

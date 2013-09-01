@@ -1,0 +1,36 @@
+---
+package:
+    name: dbus
+    description: A message bus
+    version: 1.6.12
+    dependencies:
+        - expat
+        - tc-linux
+
+sources:
+    - file: dbus-1.6.12.tar.gz
+      digest: sha1:96f7ae2edb8711fe4fb42718d03fdb00a90416d5
+      origins:
+        - http://dbus.freedesktop.org/releases/dbus/dbus-1.6.12.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/dbus-1.6.12.tar.gz
+    
+    - workdir: dbus-1.6.12
+      paths:
+        - dep: tc-linux
+          dir: bin    
+      commands:
+        - >
+            CPPFLAGS=-I$_RELBASE/$_DEP_EXPAT/usr/include
+            LDFLAGS=-L$_RELBASE/$_DEP_EXPAT/usr/lib
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --disable-static
+            --disable-nls
+            --enable-epoll
+            --with-xml=expat
+            --without-x
+        - make V=1
+        - make install DESTDIR=$_RELDIR
+        - -rm -f $_RELDIR/usr/lib/lib*.la

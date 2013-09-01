@@ -24,8 +24,11 @@ build:
                 666,full,c,1,7                  \
                 666,random,c,1,8                \
                 666,urandom,c,1,9               \
+                600,kmsg,c,1,11                 \
                 660,tty0,c,4,0                  \
                 660,tty1,c,4,1                  \
+                660,tty2,c,4,2                  \
+                660,tty3,c,4,3                  \
                 600,loop-control,c,10,237       \
                 660,loop0,b,7,0                 \
                 660,loop1,b,7,1                 \

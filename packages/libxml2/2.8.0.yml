@@ -1,0 +1,42 @@
+---
+package:
+    name: libxml2
+    description: An XML parsing library
+    version: 2.8.0
+    dependencies:
+        - libiconv
+        - zlib
+        - tc-linux
+
+sources:
+    - file: libxml2-2.8.0.tar.gz
+      digest: sha1:a0c553bd51ba79ab6fff26dc700004c6a41f5250
+      origins:
+        - ftp://xmlsoft.org/libxml2/libxml2-2.8.0.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libxml2-2.8.0.tar.gz
+    
+    - workdir: libxml2-2.8.0
+      paths:
+        - dep: tc-linux
+          dir: bin    
+      commands:
+        - >
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --disable-static
+            --without-ftp
+            --without-http
+            --without-history
+            --without-html
+            --with-minimum
+            --without-python
+            --without-readline
+            --with-iconv=$_RELBASE/$_DEP_LIBICONV/usr
+            --with-zlib=$_RELBASE/$_DEP_ZLIB/usr
+            --with-reader
+            --with-threads
+            --without-lzma
+        - make V=1
+        - make install DESTDIR=$_RELDIR

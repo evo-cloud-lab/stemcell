@@ -1,0 +1,46 @@
+---
+package:
+    name: upstart
+    description: Event-based init deamon
+    version: 1.10.0
+    dependencies:
+        - expat
+        - dbus
+        - libnih
+        - json-c
+        - tc-nih-dbus-tool
+        - tc-linux
+
+sources:
+    - file: upstart-1.10.tar.gz
+      digest: sha1:b159d510700c1737abd13e9e23c4d3d9ffe99d84
+      origins:
+        - http://upstart.ubuntu.com/download/1.10/upstart-1.10.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/upstart-1.10.tar.gz
+    
+    - workdir: upstart-1.10
+      paths:
+        - dep: tc-linux
+          dir: bin
+        - dep: tc-nih-dbus-tool
+          dir: bin
+      commands:
+        - >
+            DBUS_CFLAGS="-I$_RELBASE/$_DEP_DBUS/usr/include/dbus-1.0 -I$_RELBASE/$_DEP_DBUS/usr/lib/dbus-1.0/include"
+            DBUS_LIBS="-L$_RELBASE/$_DEP_DBUS/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_EXPAT/usr/lib -ldbus-1"
+            NIH_CFLAGS=-I$_RELBASE/$_DEP_LIBNIH/usr/include
+            NIH_LIBS="-L$_RELBASE/$_DEP_LIBNIH/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_DBUS/usr/lib -lnih"
+            NIH_DBUS_CFLAGS=-I$_RELBASE/$_DEP_LIBNIH/usr/include
+            NIH_DBUS_LIBS="-L$_RELBASE/$_DEP_LIBNIH/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_DBUS/usr/lib -lnih-dbus"
+            JSON_CFLAGS=-I$_RELBASE/$_DEP_JSON_C/usr/include/json-c
+            JSON_LIBS="-L$_RELBASE/$_DEP_JSON_C/usr/lib -ljson -ljson-c"
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --disable-static --disable-nls
+            --without-libiconv-prefix
+            --without-libintl-prefix
+        - make V=1
+        - make install DESTDIR=$_RELDIR
+        - -rm -f $_RELDIR/usr/lib/lib*.la

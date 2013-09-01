@@ -1,0 +1,28 @@
+---
+package:
+    name: json-c
+    description: JSON C library
+    version: 0.11.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: json-c_0.11.orig.tar.gz
+      digest: sha1:5d0377d2cc4a1af324d5aeb5b63032d1d026aacd
+      origins:
+        - https://launchpad.net/ubuntu/+archive/primary/+files/json-c_0.11.orig.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/json-c_0.11.orig.tar.gz
+    
+    - workdir: json-c-0.11
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux --disable-static --enable-shared
+        - make
+        - make install DESTDIR=$_RELDIR
+        - -rm -f $_RELDIR/usr/lib/lib*.la
+        

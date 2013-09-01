@@ -1,0 +1,42 @@
+---
+package:
+    name: libnih
+    description: A small C library
+    version: 1.0.3
+    dependencies:
+        - expat
+        - dbus
+        - tc-nih-dbus-tool
+        - tc-linux
+
+sources:
+    - file: libnih-1.0.3.tar.gz
+      digest: sha1:db1f3e46a47f8a58f8179ca56f304d1550f41eb0
+      origins:
+        - http://launchpad.net/libnih/1.0/1.0.3/+download/libnih-1.0.3.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libnih-1.0.3.tar.gz
+    
+    - workdir: libnih-1.0.3
+      paths:
+        - dep: tc-linux
+          dir: bin
+        - dep: tc-nih-dbus-tool
+          dir: bin
+      commands:
+        - >
+            DBUS_CFLAGS="-I$_RELBASE/$_DEP_DBUS/usr/include/dbus-1.0 -I$_RELBASE/$_DEP_DBUS/usr/lib/dbus-1.0/include"
+            DBUS_LIBS="-L$_RELBASE/$_DEP_DBUS/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_EXPAT/usr/lib -ldbus-1"
+            CPPFLAGS=-I$_RELBASE/$_DEP_EXPAT/usr/include
+            LDFLAGS=-L$_RELBASE/$_DEP_EXPAT/usr/lib
+            NIH_DBUS_TOOL=$_RELBASE/$_DEP_TC_NIH_DBUS_TOOL/bin/nih-dbus-tool
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --disable-static
+            --disable-nls
+            --without-libiconv-prefix
+            --without-libintl-prefix
+        - make V=1
+        - make install DESTDIR=$_RELDIR
+        - -rm -f $_RELDIR/usr/lib/lib*.la

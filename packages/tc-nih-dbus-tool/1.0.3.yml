@@ -1,0 +1,57 @@
+---
+package:
+    name: tc-nih-dbus-tool
+    description: Generating libnih DBus bindings
+    version: 1.0.3
+
+sources:
+    - file: libnih-1.0.3.tar.gz
+      digest: sha1:db1f3e46a47f8a58f8179ca56f304d1550f41eb0
+      origins:
+        - http://launchpad.net/libnih/1.0/1.0.3/+download/libnih-1.0.3.tar.gz
+
+    - file: expat-2.1.0.tar.gz
+      digest: sha1:b08197d146930a5543a7b99e871cba3da614f6f0
+      origins:
+        - http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
+
+    - file: dbus-1.6.12.tar.gz
+      digest: sha1:96f7ae2edb8711fe4fb42718d03fdb00a90416d5
+      origins:
+        - http://dbus.freedesktop.org/releases/dbus/dbus-1.6.12.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/expat-2.1.0.tar.gz
+        - tar zxf $_SRCDIR/dbus-1.6.12.tar.gz
+        - tar zxf $_SRCDIR/libnih-1.0.3.tar.gz
+    
+    - workdir: expat-2.1.0
+      commands:
+        - ./configure --prefix=$_RELDIR --disable-shared --enable-static
+        - make
+        - make install
+    
+    - workdir: dbus-1.6.12
+      commands:
+        - >
+            ./configure --prefix=$_RELDIR
+            --disable-shared --enable-static --disable-nls
+            --enable-epoll
+            --with-xml=expat
+            --without-x
+        - make V=1
+        - make install
+    
+    - workdir: libnih-1.0.3
+      commands:
+        - >
+            DBUS_CFLAGS="-I$_RELDIR/include/dbus-1.0 -I$_RELDIR/lib/dbus-1.0/include"
+            DBUS_LIBS="-L$_RELDIR/lib -ldbus-1"
+            CPPFLAGS=-I$_RELDIR/include
+            LDFLAGS=-L$_RELDIR/lib
+            ./configure --prefix=$_RELDIR --disable-shared --enable-static --disable-nls
+            --without-libiconv-prefix
+            --without-libintl-prefix
+        - make V=1
+        - make install

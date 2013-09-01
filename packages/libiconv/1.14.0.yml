@@ -1,0 +1,38 @@
+---
+package:
+    name: libiconv
+    description: Character convertion library
+    version: 1.14.0
+    dependencies:
+        - tc-linux
+    
+sources:
+    - file: libiconv-1.14.tar.gz
+      digest: sha1:be7d67e50d72ff067b2c0291311bc283add36965
+      origins:
+        - http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
+
+    - file: libiconv-glibc-2.16.patch.gz
+      digest: sha1:f12ba32b181e0bba481f0b0663065998a78f9b5d
+      origins:
+        - http://www.itkb.ro/userfiles/file/libiconv-glibc-2.16.patch.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libiconv-1.14.tar.gz
+    
+    - workdir: libiconv-1.14
+      paths:
+        - dep: tc-linux
+          dir: bin    
+      commands:
+        - gzip -d -c $_SRCDIR/libiconv-glibc-2.16.patch.gz | patch -p0
+        - >
+            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            --disable-static
+            --disable-rpath
+            --disable-nls
+            --without-libiconv-prefix
+            --without-libintl-prefix
+        - make
+        - make install DESTDIR=$_RELDIR

@@ -1,0 +1,32 @@
+---
+package:
+    name: libjson
+    description: A super efficient JSON reader and writer
+    version: 7.6.1
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: libjson_7.6.1.zip
+      digest: sha1:1bc01b8175dadf5ecde1ee0479c5cb2998a7b5f7
+      origins:
+        - http://downloads.sourceforge.net/project/libjson/libjson_7.6.1.zip
+
+build:
+    - commands:
+        - unzip $_SRCDIR/libjson_7.6.1.zip
+    
+    - workdir: libjson
+      paths:
+        - dep: tc-linux
+          dir: bin
+      env:
+        CXX: x86_64-linux-gcc
+        AR: x86_64-linux-ar
+        SHARED: 0
+      commands:
+        - make all prefix=/usr
+        # patch: the path in makefile is wrong
+        - mkdir -p $_RELDIR/usr/lib
+        - cp -rf _internal/Dependencies _internal/Source/
+        - make install prefix=$_RELDIR/usr
