@@ -37,7 +37,7 @@ build:
             NIH_DBUS_LIBS="-L$_RELBASE/$_DEP_LIBNIH/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_DBUS/usr/lib -lnih-dbus"
             JSON_CFLAGS=-I$_RELBASE/$_DEP_JSON_C/usr/include/json-c
             JSON_LIBS="-L$_RELBASE/$_DEP_JSON_C/usr/lib -ljson -ljson-c"
-            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            ./configure --prefix=/usr --bindir=/bin --sbindir=/sbin --sysconfdir=/etc --build=x86_64-linux --host=x86_64-linux
             --disable-static --disable-nls
             --without-libiconv-prefix
             --without-libintl-prefix

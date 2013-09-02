@@ -1,0 +1,28 @@
+---
+package:
+    name: python
+    description: Python Programming Language
+    version: 2.7.5
+    dependencies:
+        - tc-python
+        - tc-linux
+
+sources:
+    - file: Python-2.7.5.tar.xz
+      digest: sha1:b7389791f789625c2ba9d897aa324008ff482daf
+      origins:
+        - http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/Python-2.7.5.tar.xz
+    
+    - workdir: Python-2.7.5
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - sed -i -r 's/^(PYTHON_FOR_BUILD)=/\1?=/' Makefile.pre.in
+        - ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+        - make
+        - PYTHON_FOR_BUILD="$_RELBASE/$_DEP_TC_PYTHON/bin/python -E" make install DESTDIR=$_RELDIR

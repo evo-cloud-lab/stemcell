@@ -72,7 +72,7 @@ mount_root() {
 umount_root() {
     mountpoint /mnt/root/lib/firmware && umount /mnt/root/lib/firmware
     mountpoint /mnt/root/lib/modules && umount /mnt/root/lib/modules
-    mountpoint /mnt/root && umount /mnt/root    
+    mountpoint /mnt/root && umount /mnt/root
 }
 
 # find and mount boot device
@@ -92,10 +92,11 @@ mount_boot() {
 boot() {
     umount /sys
     umount /proc
-    
-    [ -x "/mnt/root/init" ] && ce exec switch_root /mnt/root /init
-    [ -x "/mnt/root/linuxrc" ] && ce exec switch_root /mnt/root /linuxrc
-    [ -x "/mnt/root/sbin/init" ] && ce exec switch_root /mnt/root /sbin/init
+
+    #[ -x "/mnt/root/init" ] && ce exec switch_root /mnt/root /init
+    #[ -x "/mnt/root/linuxrc" ] && ce exec switch_root /mnt/root /linuxrc
+    #[ -x "/mnt/root/sbin/init" ] && ce exec switch_root /mnt/root /sbin/init
+    ce exec switch_root /mnt/root /sbin/init
     echo "No init found in root file system!"
     failure
 }

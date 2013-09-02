@@ -22,10 +22,12 @@ package:
         - nodejs
         - binutils
         - gcc
-        - bash
         - syslinux
         - lxc
         - redis
+        - bash
+        - make
+        - python
         - tc-squashfs
         - basefs
 
@@ -42,6 +44,9 @@ sources:
     - file: network-init.sh
       packaged: true
     
+    - file: console.conf
+      packaged: true
+
     - file: tty1.conf
       packaged: true
     
@@ -52,6 +57,12 @@ sources:
       packaged: true
 
     - file: udhcpc-script.sh
+      packaged: true
+
+    - file: passwd.txt
+      packaged: true
+    
+    - file: group.txt
       packaged: true
       
     - file: banner.txt
@@ -77,22 +88,17 @@ build:
         rmdir $_RELDIR/root/usr/lib
         ln -s lib64 $_RELDIR/root/usr/lib
         
-        # use upstart
-        test -h $_RELDIR/root/linuxrc && rm $_RELDIR/root/linuxrc
-        test -e $_RELDIR/root/sbin/init && rm $_RELDIR/root/sbin/init
-        ln -s /usr/sbin/init $_RELDIR/root/sbin/init
-        mv $_RELDIR/root/usr/etc/dbus-1 $_RELDIR/root/etc/
-        mv $_RELDIR/root/usr/etc/init/rc-sysinit.conf $_RELDIR/root/etc/init/
-        rm -fr $_RELDIR/root/usr/etc
-        
         # create init script and services
+        rm -f $_RELDIR/root/etc/init/*.conf
         cp $_PKGDIR/*.conf $_RELDIR/root/etc/init/
         cp $_PKGDIR/*.sh $_RELDIR/root/etc/scripts/
         chmod a+rx $_RELDIR/root/etc/scripts/*.sh
         
-        # banner and issue
+        # other files
         cp $_PKGDIR/banner.txt $_RELDIR/root/etc/banner
         cp $_PKGDIR/issue.txt $_RELDIR/root/etc/issue
+        cp $_PKGDIR/passwd.txt $_RELDIR/root/etc/passwd
+        cp $_PKGDIR/group.txt $_RELDIR/root/etc/group
 
     - scripts:
         root.sh: |

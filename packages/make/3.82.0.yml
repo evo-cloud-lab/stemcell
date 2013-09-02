@@ -1,0 +1,23 @@
+---
+package:
+    name: make
+    description: run makefile
+    version: 3.82.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: make-3.82.tar.bz2
+      digest: sha1:b8a8a99e4cb636a213aad3816dda827a92b9bbed
+      origins:
+        - http://ftp.gnu.org/gnu/make/make-3.82.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/make-3.82.tar.bz2
+    
+    - workdir: make-3.82
+      commands:
+        - ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+        - make
+        - make install DESTDIR=$_RELDIR
