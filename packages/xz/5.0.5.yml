@@ -1,0 +1,26 @@
+---
+package:
+    name: xz
+    description: XZ Utils
+    version: 5.0.5
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: xz-5.0.5.tar.xz
+      digest: sha1:56f1d78117f0c32bbb1cfd40117aa7f55bee8765
+      origins:
+        - http://tukaani.org/xz/xz-5.0.5.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/xz-5.0.5.tar.xz
+    
+    - workdir: xz-5.0.5
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux --disable-static
+        - make
+        - make install DESTDIR=$_RELDIR

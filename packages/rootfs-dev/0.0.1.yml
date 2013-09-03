@@ -6,6 +6,7 @@ package:
     dependencies:
         - glibc
         - zlib
+        - xz
         - attr
         - libcap
         - libseccomp
@@ -19,7 +20,9 @@ package:
         - busybox
         - upstart
         - e2fsprogs
+        - squashfs
         - nodejs
+        - node-pm2
         - binutils
         - gcc
         - syslinux
