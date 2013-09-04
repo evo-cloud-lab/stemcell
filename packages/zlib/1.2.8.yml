@@ -23,6 +23,7 @@ build:
         - dep: tc-linux
           dir: bin    
       commands:
-        - ./configure --prefix=/usr
+        - ./configure --prefix=/
         - make
-        - make install DESTDIR=$_RELDIR
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

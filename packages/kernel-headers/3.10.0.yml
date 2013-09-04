@@ -18,4 +18,4 @@ build:
     
     - workdir: linux
       commands:
-        - make headers_install INSTALL_HDR_PATH=$_RELDIR
+        - make headers_install INSTALL_HDR_PATH=$_RELDIR/dev

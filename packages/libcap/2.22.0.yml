@@ -27,9 +27,11 @@ build:
         - sed -i -r 's/^(AR[[:space:]]+:=).+$/\1 x86_64-linux-ar/' Make.Rules
         - sed -i -r 's/^(RANLIB[[:space:]]+:=).+$/\1 x86_64-linux-ranlib/' Make.Rules
         - sed -i -r 's/^(DEBUG[[:space:]]+=).+$/\1/' Make.Rules
-        - sed -i -r "s!^(SYSTEM_HEADERS[[:space:]]+=).+\$!\\1 $_RELBASE/$_DEP_GLIBC/usr/include!" Make.Rules
+        - sed -i -r "s!^(SYSTEM_HEADERS[[:space:]]+=).+\$!\\1 $_RELBASE/$_DEP_GLIBC/dev/include!" Make.Rules
         - sed -i -r 's/^(PAM_CAP[[:space:]]+:=).+$/\1 no/' Make.Rules
-        - sed -i -r "s!^CFLAGS[[:space:]]+\\+=!CFLAGS += -I$_RELBASE/$_DEP_ATTR/usr/include !" Make.Rules
-        - sed -i -r "s!^LDFLAGS[[:space:]]+\\+=!LDFLAGS += -L$_RELBASE/$_DEP_ATTR/usr/lib64 -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ATTR/usr/lib64 !" Make.Rules
-        - make prefix=/usr
-        - make install RAISE_SETFCAP=no DESTDIR=$_RELDIR
+        - sed -i -r "s!^CFLAGS[[:space:]]+\\+=!CFLAGS += -I$_RELBASE/$_DEP_ATTR/dev/include !" Make.Rules
+        - sed -i -r "s!^LDFLAGS[[:space:]]+\\+=!LDFLAGS += -L$_RELBASE/$_DEP_ATTR/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ATTR/dev/lib !" Make.Rules
+        - make prefix=/ lib=lib
+        - make install lib=lib RAISE_SETFCAP=no DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh sbin

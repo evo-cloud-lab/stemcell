@@ -24,6 +24,8 @@ build:
         GCC: x86_64-linux-gcc
         AR: x86_64-linux-ar
       commands:
-        - ./configure --prefix=/usr
+        - ./configure --prefix=/
         - make V=1
-        - make install DESTDIR=$_RELDIR V=1
+        - make install DESTDIR=$_RELDIR/dev V=1
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib        
+        

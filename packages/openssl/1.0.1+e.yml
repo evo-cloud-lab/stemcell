@@ -25,9 +25,14 @@ build:
             CC=x86_64-linux-gcc
             AR=x86_64-linux-ar
             RANLIB=x86_64-linux-ranlib
-            ./config --prefix=/usr threads zlib shared
-            -I$_RELBASE/$_DEP_ZLIB/usr/include
-            -L$_RELBASE/$_DEP_ZLIB/usr/lib
+            ./config --prefix=/ --openssldir=/etc/ssl --libdir=/lib threads zlib shared
+            -I$_RELBASE/$_DEP_ZLIB/dev/include
+            -L$_RELBASE/$_DEP_ZLIB/dev/lib
             -lz
-        - make
-        - make install INSTALL_PREFIX=$_RELDIR
+        - MAKEFLAGS='' make
+        - MAKEFLAGS='' make install INSTALL_PREFIX=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib lib/engines
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh etc
+        - -rm -fr $_RELDIR/rel/etc/ssl/man
+        

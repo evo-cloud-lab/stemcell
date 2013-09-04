@@ -1,10 +1,11 @@
 ---
 package:
-    name: rootfs-dev
-    description: Root file system for development
+    name: rootfs-core
+    description: Root file system for core components
     version: 0.0.1
     dependencies:
         - glibc
+        - gcc
         - zlib
         - xz
         - attr
@@ -21,16 +22,12 @@ package:
         - upstart
         - e2fsprogs
         - squashfs
-        - nodejs
-        - node-pm2
-        - binutils
-        - gcc
         - syslinux
         - lxc
         - redis
+        - nodejs
+        - node-pm2
         - bash
-        - make
-        - python
         - tc-squashfs
         - basefs
 
@@ -43,8 +40,10 @@ build:
         for dep in $_PKGDEPS ; do
             [ "${dep#tc-}" == "$dep" ] && \
             [ "${dep#basefs-}" == "$dep" ] && \
-            cp -a $_RELBASE/$dep/dev/* $_RELDIR/root/
+            cp -a $_RELBASE/$dep/rel/* $_RELDIR/root/
         done
+        
+        rm -fr $_RELDIR/root/lib32
         
         rm -f $_RELDIR/root/etc/init/*.conf
         cp -a $_RELBASE/$_DEP_BASEFS/etc $_RELDIR/root/

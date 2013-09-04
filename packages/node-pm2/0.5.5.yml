@@ -4,14 +4,9 @@ package:
     description: Node.js package pm2 - process manager
     version: 0.5.5
     dependencies:
+        - nodejs
         - tc-python
         - tc-linux
-
-sources:
-    - file: node-v0.10.15.tar.gz
-      digest: sha1:14174896de074c244b0ed2251a95d7163d5a5e87
-      origins:
-        - http://nodejs.org/dist/v0.10.15/node-v0.10.15.tar.gz
 
 build:
     - paths:
@@ -33,5 +28,5 @@ build:
         OBJDUMP: x86_64-linux-objdump
         NM: x86_64-linux-nm
       commands:
-        - tar zxf $_SRCDIR/node-v0.10.15.tar.gz
-        - npm install pm2@0.5.5 -g --prefix=$_RELDIR/usr --nodedir=$_BLDDIR/node-v0.10.15 -dd
+        - npm install pm2@0.5.5 -g --prefix=$_RELDIR/dev --nodedir=$_RELBASE/$_DEP_NODEJS/src -dd
+        - cp -a $_RELDIR/dev $_RELDIR/rel

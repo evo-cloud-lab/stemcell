@@ -21,6 +21,8 @@ build:
         - dep: tc-linux
           dir: bin    
       commands:
-        - ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux --disable-static
+        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux --disable-static
         - make
-        - make install DESTDIR=$_RELDIR    
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/lib*.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

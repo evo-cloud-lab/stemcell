@@ -22,10 +22,16 @@ build:
         - make -C busybox-1.21.1 defconfig O=$_BLDDIR/busybox
     
     - workdir: busybox
+      paths:
+        - dep: tc-linux
+          dir: bin
       commands:
         - cp -f $_PKGDIR/config-1.21.1 .config
-        - sed -i -r "s|^(CONFIG_PREFIX=).*$|\\1\"$_RELDIR\"|" .config
-        - sed -i -r "s|^(CONFIG_CROSS_COMPILER_PREFIX=).*$|\\1\"$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-\"|" .config        
+        - sed -i -r "s|^(CONFIG_PREFIX=).*$|\\1\"$_RELDIR/dev\"|" .config
+        - sed -i -r "s|^(CONFIG_CROSS_COMPILER_PREFIX=).*$|\\1\"x86_64-linux-\"|" .config        
         - make oldconfig
         - make V=1
         - make install
+        - cp -a $_RELDIR/dev $_RELDIR/rel
+        - x86_64-linux-strip -g $_RELDIR/rel/bin/busybox
+        - chmod a+x $_RELDIR/rel/bin/busybox

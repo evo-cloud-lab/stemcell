@@ -18,6 +18,6 @@ build:
     
     - workdir: make-3.82
       commands:
-        - ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux --disable-nls
         - make
-        - make install DESTDIR=$_RELDIR
+        - make install DESTDIR=$_RELDIR/dev

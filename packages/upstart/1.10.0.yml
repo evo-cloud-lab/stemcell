@@ -29,18 +29,21 @@ build:
           dir: bin
       commands:
         - >
-            DBUS_CFLAGS="-I$_RELBASE/$_DEP_DBUS/usr/include/dbus-1.0 -I$_RELBASE/$_DEP_DBUS/usr/lib/dbus-1.0/include"
-            DBUS_LIBS="-L$_RELBASE/$_DEP_DBUS/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_EXPAT/usr/lib -ldbus-1"
-            NIH_CFLAGS=-I$_RELBASE/$_DEP_LIBNIH/usr/include
-            NIH_LIBS="-L$_RELBASE/$_DEP_LIBNIH/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_DBUS/usr/lib -lnih"
-            NIH_DBUS_CFLAGS=-I$_RELBASE/$_DEP_LIBNIH/usr/include
-            NIH_DBUS_LIBS="-L$_RELBASE/$_DEP_LIBNIH/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_DBUS/usr/lib -lnih-dbus"
-            JSON_CFLAGS=-I$_RELBASE/$_DEP_JSON_C/usr/include/json-c
-            JSON_LIBS="-L$_RELBASE/$_DEP_JSON_C/usr/lib -ljson -ljson-c"
-            ./configure --prefix=/usr --bindir=/bin --sbindir=/sbin --sysconfdir=/etc --build=x86_64-linux --host=x86_64-linux
+            DBUS_CFLAGS="-I$_RELBASE/$_DEP_DBUS/dev/include/dbus-1.0 -I$_RELBASE/$_DEP_DBUS/dev/lib/dbus-1.0/include"
+            DBUS_LIBS="-L$_RELBASE/$_DEP_DBUS/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_EXPAT/dev/lib -ldbus-1"
+            NIH_CFLAGS=-I$_RELBASE/$_DEP_LIBNIH/dev/include
+            NIH_LIBS="-L$_RELBASE/$_DEP_LIBNIH/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_DBUS/dev/lib -lnih"
+            NIH_DBUS_CFLAGS=-I$_RELBASE/$_DEP_LIBNIH/dev/include
+            NIH_DBUS_LIBS="-L$_RELBASE/$_DEP_LIBNIH/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_DBUS/dev/lib -lnih-dbus"
+            JSON_CFLAGS=-I$_RELBASE/$_DEP_JSON_C/dev/include/json-c
+            JSON_LIBS="-L$_RELBASE/$_DEP_JSON_C/dev/lib -ljson -ljson-c"
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
             --disable-static --disable-nls
             --without-libiconv-prefix
             --without-libintl-prefix
         - make V=1
-        - make install DESTDIR=$_RELDIR
-        - -rm -f $_RELDIR/usr/lib/lib*.la
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/lib*.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin sbin
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh etc

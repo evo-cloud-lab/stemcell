@@ -4,6 +4,7 @@ package:
     description: Node.js Runtime
     version: 0.10.15
     dependencies:
+        - tc-python
         - tc-linux
         - openssl
         - zlib
@@ -17,21 +18,35 @@ sources:
 build:
     - commands:
         - tar zxf $_SRCDIR/node-v0.10.15.tar.gz
+        - cp -rf node-v0.10.15 $_RELDIR/src
     
     - workdir: node-v0.10.15
       env:
-        CC: x86_64-linux-gcc
+        CC:  x86_64-linux-gcc
+        CPP: x86_64-linux-gcc -E
+        CXX: x86_64-linux-g++
+        AS:  x86_64-linux-as
+        AR:  x86_64-linux-ar
+        RANLIB: x86_64-linux-ranlib
+        LD:  x86_64-linux-g++
+        LINK: x86_64-linux-g++
+        STRIP: x86_64-linux-strip
+        OBJCOPY: x86_64-linux-objcopy
+        OBJDUMP: x86_64-linux-objdump
+        NM: x86_64-linux-nm
       paths:
         - dep: tc-linux
           dir: bin
       commands:
         - >
-            ./configure --prefix=/usr --dest-cpu=x64 --dest-os=linux
+            ./configure --prefix=/ --dest-cpu=x64 --dest-os=linux
             --shared-zlib
-            --shared-zlib-includes=$_RELBASE/$_DEP_ZLIB/usr/include
-            --shared-zlib-libpath=$_RELBASE/$_DEP_ZLIB/usr/lib
+            --shared-zlib-includes=$_RELBASE/$_DEP_ZLIB/dev/include
+            --shared-zlib-libpath=$_RELBASE/$_DEP_ZLIB/dev/lib
             --shared-openssl
-            --shared-openssl-includes=$_RELBASE/$_DEP_OPENSSL/usr/include
-            --shared-openssl-libpath=$_RELBASE/$_DEP_OPENSSL/usr/lib
+            --shared-openssl-includes=$_RELBASE/$_DEP_OPENSSL/dev/include
+            --shared-openssl-libpath=$_RELBASE/$_DEP_OPENSSL/dev/lib
         - make
-        - make install DESTDIR=$_RELDIR
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh lib

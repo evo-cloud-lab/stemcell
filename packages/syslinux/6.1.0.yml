@@ -25,6 +25,10 @@ build:
         # disable -j as parallel build is broken on syslinux
         - >
             CC=$_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-gcc
-            MAKEFLAGS='' make bios install INSTALLROOT=$_RELDIR
+            MAKEFLAGS='' make bios install INSTALLROOT=$_RELDIR/dev
+        - mv $_RELDIR/dev/usr/bin $_RELDIR/dev/
+        - mv $_RELDIR/dev/usr/share $_RELDIR/dev/
+        - -rm -fr $_RELDIR/dev/usr
+        - cp -a $_RELDIR/dev $_RELDIR/rel
 
 # for efi32, require ia32 gnu-efi header files for efi32

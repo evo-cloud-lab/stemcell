@@ -22,6 +22,8 @@ build:
         - dep: tc-linux
           dir: bin    
       commands:
-        - ../libtirpc-0.2.3/configure --build=x86_64-linux --host=x86_64-linux --prefix=/usr --without-nsl
-        - make install DESTDIR=$_RELDIR
-        - -rm -f $_RELDIR/usr/lib/libtirpc.la
+        - ../libtirpc-0.2.3/configure --build=x86_64-linux --host=x86_64-linux --prefix=/ --without-nsl --disable-static
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/libtirpc.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh etc

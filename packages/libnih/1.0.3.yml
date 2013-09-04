@@ -27,16 +27,17 @@ build:
           dir: bin
       commands:
         - >
-            DBUS_CFLAGS="-I$_RELBASE/$_DEP_DBUS/usr/include/dbus-1.0 -I$_RELBASE/$_DEP_DBUS/usr/lib/dbus-1.0/include"
-            DBUS_LIBS="-L$_RELBASE/$_DEP_DBUS/usr/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_EXPAT/usr/lib -ldbus-1"
-            CPPFLAGS=-I$_RELBASE/$_DEP_EXPAT/usr/include
-            LDFLAGS=-L$_RELBASE/$_DEP_EXPAT/usr/lib
+            DBUS_CFLAGS="-I$_RELBASE/$_DEP_DBUS/dev/include/dbus-1.0 -I$_RELBASE/$_DEP_DBUS/dev/lib/dbus-1.0/include"
+            DBUS_LIBS="-L$_RELBASE/$_DEP_DBUS/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_EXPAT/dev/lib -ldbus-1"
+            CPPFLAGS=-I$_RELBASE/$_DEP_EXPAT/dev/include
+            LDFLAGS=-L$_RELBASE/$_DEP_EXPAT/dev/lib
             NIH_DBUS_TOOL=$_RELBASE/$_DEP_TC_NIH_DBUS_TOOL/bin/nih-dbus-tool
-            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
             --disable-static
             --disable-nls
             --without-libiconv-prefix
             --without-libintl-prefix
         - make V=1
-        - make install DESTDIR=$_RELDIR
-        - -rm -f $_RELDIR/usr/lib/lib*.la
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/lib*.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

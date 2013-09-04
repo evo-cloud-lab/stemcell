@@ -27,12 +27,13 @@ build:
           dir: bin
       commands:
         - >
-            ../gcc-4.8.1/configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            ../gcc-4.8.1/configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
             --with-sysroot=/
-            --with-gmp=$_RELBASE/$_DEP_GMP/usr
-            --with-mpfr=$_RELBASE/$_DEP_MPFR/usr
-            --with-mpc=$_RELBASE/$_DEP_MPC/usr
+            --with-gmp=$_RELBASE/$_DEP_GMP/dev
+            --with-mpfr=$_RELBASE/$_DEP_MPFR/dev
+            --with-mpc=$_RELBASE/$_DEP_MPC/dev
             --disable-nls
             --enable-languages=c,c++
         - make
-        - make install DESTDIR=$_RELDIR
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib32 lib64

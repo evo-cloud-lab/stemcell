@@ -26,6 +26,8 @@ build:
         - sed -i -r 's/^AR=.*$/AR=x86_64-linux-ar rcu/' deps/lua/src/Makefile
         - sed -i -r 's/^RANLIB=.*/RANLIB=x86_64-linux-ranlib/' deps/lua/src/Makefile
         - sed -i -r 's/^(MKLIB = ).+$/\1x86_64-linux-ar crus $@/' deps/jemalloc/Makefile.in
-        - sed -i -r 's!^([[:space:]]+cd jemalloc && ./configure)[[:space:]]+(.+)$!\1 --prefix=/usr --build=x86_64-linux --host=x86_64-linux \2!' deps/Makefile
-        - CC=x86_64-linux-gcc AR=x86_64-linux-ar RANLIB=x86_64-linux-ranlib make PREFIX=/usr V=1
-        - make install PREFIX=$_RELDIR/usr V=1
+        - sed -i -r 's!^([[:space:]]+cd jemalloc && ./configure)[[:space:]]+(.+)$!\1 --prefix=/ --build=x86_64-linux --host=x86_64-linux \2!' deps/Makefile
+        - CC=x86_64-linux-gcc AR=x86_64-linux-ar RANLIB=x86_64-linux-ranlib make PREFIX=/ V=1
+        - make install PREFIX=$_RELDIR/dev V=1
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin
+        

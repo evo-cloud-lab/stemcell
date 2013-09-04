@@ -11,7 +11,7 @@ mkdir -p $ROOTDIR/mnt/root
 
 tar -C $ROOTDIR -xf $_RELBASE/$_DEP_BASEFS/rootfs.tar
 
-cp -a $_RELBASE/$_DEP_BUSYBOX_INITRD/* $ROOTDIR/
+cp -a $_RELBASE/$_DEP_BUSYBOX_INITRD/rel/* $ROOTDIR/
 
 cp $_PKGDIR/udhcpc-script.sh $ROOTDIR/etc/
 chmod a+rx $ROOTDIR/etc/udhcpc-script.sh

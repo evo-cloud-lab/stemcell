@@ -6,7 +6,7 @@ package:
     dependencies:
         - kernel
         - initrd
-        - rootfs-dev
+        - rootfs-core
         - syslinux
 
 sources:
@@ -20,4 +20,4 @@ build:
     - paths:
         - dep: tc-squashfs
       commands:
-        - /bin/bash $_PKGDIR/mkisoimage.sh $_RELBASE/$_DEP_ROOTFS_DEV/rootfs-dev.squashfs
+        - /bin/bash $_PKGDIR/mkisoimage.sh $_RELBASE/$_DEP_ROOTFS_CORE/rootfs.squashfs

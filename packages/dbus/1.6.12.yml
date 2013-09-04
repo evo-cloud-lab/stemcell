@@ -23,14 +23,17 @@ build:
           dir: bin    
       commands:
         - >
-            CPPFLAGS=-I$_RELBASE/$_DEP_EXPAT/usr/include
-            LDFLAGS=-L$_RELBASE/$_DEP_EXPAT/usr/lib
-            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            CPPFLAGS=-I$_RELBASE/$_DEP_EXPAT/dev/include
+            LDFLAGS=-L$_RELBASE/$_DEP_EXPAT/dev/lib
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
             --disable-static
             --disable-nls
             --enable-epoll
             --with-xml=expat
             --without-x
         - make V=1
-        - make install DESTDIR=$_RELDIR
-        - -rm -f $_RELDIR/usr/lib/lib*.la
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/lib*.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin libexec
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh etc share/dbus-1 var

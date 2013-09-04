@@ -26,10 +26,13 @@ build:
           dir: bin
       commands:
         - >
-            CFLAGS="-I$_RELBASE/$_DEP_LIBSECCOMP/usr/include -I$_RELBASE/$_DEP_LIBAPPARMOR/usr/include -I$_RELBASE/$_DEP_LIBCAP/usr/include"
-            LDFLAGS="-L$_RELBASE/$_DEP_LIBSECCOMP/usr/lib -L$_RELBASE/$_DEP_LIBAPPARMOR/usr/lib -L$_RELBASE/$_DEP_LIBCAP/lib64 -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ATTR/usr/lib64"
-            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            CFLAGS="-I$_RELBASE/$_DEP_LIBSECCOMP/dev/include -I$_RELBASE/$_DEP_LIBAPPARMOR/dev/include -I$_RELBASE/$_DEP_LIBCAP/dev/include"
+            LDFLAGS="-L$_RELBASE/$_DEP_LIBSECCOMP/dev/lib -L$_RELBASE/$_DEP_LIBAPPARMOR/dev/lib -L$_RELBASE/$_DEP_LIBCAP/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ATTR/dev/lib"
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
             --enable-seccomp
             --enable-apparmor
         - make
-        - make install DESTDIR=$_RELDIR
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin libexec
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh etc share/lxc var 

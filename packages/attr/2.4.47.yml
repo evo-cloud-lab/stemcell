@@ -22,9 +22,11 @@ build:
           dir: bin
       commands:
         - >
-            ./configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+            --disable-static
             --enable-gettext=no
-            --enable-lib64=yes
+            --enable-lib64=no
         - make
-        - make install install-dev install-lib DESTDIR=$_RELDIR
-        - -rm -f $_RELDIR/usr/lib64/libattr.la
+        - make install install-dev install-lib DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/libattr.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

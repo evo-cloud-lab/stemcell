@@ -11,7 +11,7 @@ mkdir -p $ROOTDIR/isolinux
 
 KERNEL_DIR=$_RELBASE/$_DEP_KERNEL
 INITRD_DIR=$_RELBASE/$_DEP_INITRD
-ISOLNX_DIR=$_RELBASE/$_DEP_SYSLINUX/usr/share/syslinux
+ISOLNX_DIR=$_RELBASE/$_DEP_SYSLINUX/rel/share/syslinux
 
 cp $KERNEL_DIR/bzImage              $ROOTDIR/boot/vmlinuz
 cp $KERNEL_DIR/modules.squashfs     $ROOTDIR/boot/modules.sfs

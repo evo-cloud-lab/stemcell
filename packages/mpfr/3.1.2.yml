@@ -23,9 +23,9 @@ build:
           dir: bin    
       commands:
         - >
-            ../mpfr-3.1.2/configure --prefix=/usr --build=x86_64-linux --host=x86_64-linux
-            --with-gmp=$_RELBASE/$_DEP_GMP/usr
+            ../mpfr-3.1.2/configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+            --with-gmp=$_RELBASE/$_DEP_GMP/dev
             --disable-shared
         - make
-        - make install DESTDIR=$_RELDIR
-        - -rm -f $_RELDIR/usr/lib/libmpfr.la
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/libmpfr.la

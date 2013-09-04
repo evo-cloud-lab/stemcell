@@ -26,6 +26,7 @@ build:
         - sed -i -r 's/^#(XZ_SUPPORT\s*=)/\1/' Makefile
         - >
             CC=x86_64-linux-gcc
-            EXTRA_CFLAGS="-I$_RELBASE/$_DEP_XZ/usr/include -I$_RELBASE/$_DEP_ZLIB/usr/include"
-            EXTRA_LDFLAGS="-L$_RELBASE/$_DEP_XZ/usr/lib -L$_RELBASE/$_DEP_ZLIB/usr/lib"
-            make install INSTALL_DIR=$_RELDIR/usr
+            EXTRA_CFLAGS="-I$_RELBASE/$_DEP_XZ/dev/include -I$_RELBASE/$_DEP_ZLIB/dev/include"
+            EXTRA_LDFLAGS="-L$_RELBASE/$_DEP_XZ/dev/lib -L$_RELBASE/$_DEP_ZLIB/dev/lib"
+            make install INSTALL_DIR=$_RELDIR/dev/bin
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin

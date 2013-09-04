@@ -4,11 +4,63 @@ package:
     description: Base file system layout
     version: 0.0.1
 
+sources:
+    - file: startup.sh
+      packaged: true
+
+    - file: startup.conf
+      packaged: true
+      
+    - file: network-init.conf
+      packaged: true
+    
+    - file: network-init.sh
+      packaged: true
+    
+    - file: console.conf
+      packaged: true
+
+    - file: tty1.conf
+      packaged: true
+    
+    - file: tty2.conf
+      packaged: true
+    
+    - file: tty3.conf
+      packaged: true
+
+    - file: udhcpc-script.sh
+      packaged: true
+
+    - file: passwd.txt
+      packaged: true
+    
+    - file: group.txt
+      packaged: true
+      
+    - file: banner.txt
+      packaged: true
+    
+    - file: issue.txt
+      packaged: true
+
 build:
     - commands:
         - for d in dev mnt proc sys var tmp ; do mkdir -p $_RELDIR/root/$d ; done
         - mkdir -p $_RELDIR/root/lib/modules
         - mkdir -p $_RELDIR/root/lib/firmware
+        # create etc template
+        - mkdir -p $_RELDIR/etc/init
+        - mkdir -p $_RELDIR/etc/scripts
+        # create init script and services
+        - cp $_PKGDIR/*.conf $_RELDIR/etc/init/
+        - cp $_PKGDIR/*.sh $_RELDIR/etc/scripts/
+        - chmod a+rx $_RELDIR/etc/scripts/*.sh
+        # other files
+        - cp $_PKGDIR/banner.txt $_RELDIR/etc/banner
+        - cp $_PKGDIR/issue.txt $_RELDIR/etc/issue
+        - cp $_PKGDIR/passwd.txt $_RELDIR/etc/passwd
+        - cp $_PKGDIR/group.txt $_RELDIR/etc/group
 
     - scripts:
         root.sh: |

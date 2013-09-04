@@ -3,6 +3,8 @@ package:
     name: tc-python
     description: Python Programming Language
     version: 2.7.5
+    dependencies:
+        - tc-bzip2
 
 sources:
     - file: Python-2.7.5.tar.xz
@@ -16,6 +18,9 @@ build:
     
     - workdir: Python-2.7.5
       commands:
-        - ./configure --prefix=$_RELDIR
+        - >
+            CPPFLAGS=-I$_RELBASE/$_DEP_TC_BZIP2/include
+            LDFLAGS=-L$_RELBASE/$_DEP_TC_BZIP2/lib
+            ./configure --prefix=$_RELDIR --with-bz2
         - make
         - make install

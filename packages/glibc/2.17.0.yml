@@ -22,17 +22,26 @@ build:
       paths:
         - dep: tc-elf
           dir: bin
+      env:
+        TC_PREFIX: x86_64-elf-
       commands:
         - >
             CFLAGS="-O2 -U_FORTIFY_SOURCE -fno-stack-protector"
-            ../glibc-2.17/configure --prefix=/usr
+            ../glibc-2.17/configure --prefix=/
             --build=x86_64-elf
             --host=x86_64-linux
-            --with-headers=$_RELBASE/$_DEP_KERNEL_HEADERS/include
+            --with-headers=$_RELBASE/$_DEP_KERNEL_HEADERS/dev/include
             --enable-add-ons
             --enable-kernel=2.6.34
             --enable-obsolete-rpc
             --disable-profile
+            --disable-nls
         - make
-        - make install install_root=$_RELDIR
-        - cp -r $_RELBASE/$_DEP_KERNEL_HEADERS/include/* $_RELDIR/usr/include/
+        - make install install_root=$_RELDIR/dev
+        - cp -r $_RELBASE/$_DEP_KERNEL_HEADERS/dev/include/* $_RELDIR/dev/include/
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin sbin
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh etc
+        # make a faked sysroot for /usr/include
+        - ln -s dev $_RELDIR/usr
+        - ln -s dev/lib $_RELDIR/lib

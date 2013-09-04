@@ -42,8 +42,8 @@ build:
             --disable-nls
             --enable-languages=c,c++
             --disable-multilib
-        - cp $_RELBASE/$_DEP_GLIBC/usr/lib64/crti.o $_RELDIR/x86_64-linux/lib/
-        - cp $_RELBASE/$_DEP_GLIBC/usr/lib64/crtn.o $_RELDIR/x86_64-linux/lib/
-        - cp $_RELBASE/$_DEP_GLIBC/usr/lib64/crt1.o $_RELDIR/x86_64-linux/lib/        
+        - cp $_RELBASE/$_DEP_GLIBC/dev/lib/crti.o $_RELDIR/x86_64-linux/lib/
+        - cp $_RELBASE/$_DEP_GLIBC/dev/lib/crtn.o $_RELDIR/x86_64-linux/lib/
+        - cp $_RELBASE/$_DEP_GLIBC/dev/lib/crt1.o $_RELDIR/x86_64-linux/lib/        
         - make
         - make install
