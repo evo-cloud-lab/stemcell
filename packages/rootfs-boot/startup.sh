@@ -32,15 +32,15 @@ detect_hw() {
 [ -f /etc/banner ] && cat /etc/banner
 
 # mount default file systems
-mount -t proc none  /proc
-mount -t sysfs none /sys
+mountpoint /proc || mount -t proc  none /proc
+mountpoint /sys  || mount -t sysfs none /sys
 
 detect_hw
 probe_mods btrfs
 
-# re-generate /dev
-mount -t tmpfs none /dev
-mdev -s
-
 # mount fstab
-mount -a
+[ -f /etc/fstab ] && mount -a
+
+# notify other services
+initctl emit sys-boot
+initctl emit sys-init

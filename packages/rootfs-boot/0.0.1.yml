@@ -1,0 +1,60 @@
+---
+package:
+    name: rootfs-boot
+    description: Scripts for boot up
+    version: 0.0.1
+
+sources:
+    - file: startup.sh
+      packaged: true
+
+    - file: startup.conf
+      packaged: true
+      
+    - file: network-init.conf
+      packaged: true
+    
+    - file: network-init.sh
+      packaged: true
+    
+    - file: console.conf
+      packaged: true
+
+    - file: tty1.conf
+      packaged: true
+    
+    - file: tty2.conf
+      packaged: true
+    
+    - file: tty3.conf
+      packaged: true
+
+    - file: udhcpc-script.sh
+      packaged: true
+
+    - file: passwd.txt
+      packaged: true
+    
+    - file: group.txt
+      packaged: true
+      
+    - file: banner.txt
+      packaged: true
+    
+    - file: issue.txt
+      packaged: true
+
+build:
+    - commands:
+        # create etc template
+        - mkdir -p $_RELDIR/root/etc/init
+        - mkdir -p $_RELDIR/root/etc/scripts
+        # create init script and services
+        - cp $_PKGDIR/*.conf $_RELDIR/root/etc/init/
+        - cp $_PKGDIR/*.sh $_RELDIR/root/etc/scripts/
+        - chmod a+rx $_RELDIR/root/etc/scripts/*.sh
+        # other files
+        - cp $_PKGDIR/banner.txt $_RELDIR/root/etc/banner
+        - cp $_PKGDIR/issue.txt $_RELDIR/root/etc/issue
+        - cp $_PKGDIR/passwd.txt $_RELDIR/root/etc/passwd
+        - cp $_PKGDIR/group.txt $_RELDIR/root/etc/group

@@ -6,7 +6,7 @@ package:
     dependencies:
         - kernel
         - busybox-initrd
-        - basefs
+        - rootfs-base
         - tc-xz
 
 sources:

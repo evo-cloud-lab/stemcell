@@ -32,7 +32,8 @@ package:
         - make
         - python
         - tc-squashfs
-        - basefs
+        - rootfs-base
+        - rootfs-boot
 
 build:
     - script: |
@@ -42,17 +43,17 @@ build:
         
         for dep in $_PKGDEPS ; do
             [ "${dep#tc-}" == "$dep" ] && \
-            [ "${dep#basefs-}" == "$dep" ] && \
+            [ "${dep#rootfs-}" == "$dep" ] && \
             cp -a $_RELBASE/$dep/dev/* $_RELDIR/root/
         done
         
         rm -f $_RELDIR/root/etc/init/*.conf
-        cp -a $_RELBASE/$_DEP_BASEFS/etc $_RELDIR/root/
+        cp -a $_RELBASE/$_DEP_ROOTFS_BOOT/root/* $_RELDIR/root/
 
     - scripts:
         root.sh: |
             set -e
-            tar -C $_RELDIR/root -xf $_RELBASE/$_DEP_BASEFS/rootfs.tar
+            tar -C $_RELDIR/root -xf $_RELBASE/$_DEP_ROOTFS_BASE/rootfs.tar
             
             # fix /lib as 64-bit system uses /lib64
             mv -f $_RELDIR/root/lib/* $_RELDIR/root/lib64/

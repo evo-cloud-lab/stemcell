@@ -9,7 +9,7 @@ mkdir -p $ROOTDIR/initrd
 mkdir -p $ROOTDIR/mnt/boot
 mkdir -p $ROOTDIR/mnt/root
 
-tar -C $ROOTDIR -xf $_RELBASE/$_DEP_BASEFS/rootfs.tar
+tar -C $ROOTDIR -xf $_RELBASE/$_DEP_ROOTFS_BASE/rootfs.tar
 
 cp -a $_RELBASE/$_DEP_BUSYBOX_INITRD/rel/* $ROOTDIR/
 
