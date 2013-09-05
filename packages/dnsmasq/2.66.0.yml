@@ -1,0 +1,26 @@
+---
+package:
+    name: dnsmasq
+    description: Small caching DNS proxy and DHCP/TFTP server
+    version: 2.66.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: dnsmasq_2.66.orig.tar.gz
+      digest: sha1:9af14da6d45d531f312b0338ffe295a8969895c2
+      origins:
+        - http://launchpad.net/ubuntu/+archive/primary/+files/dnsmasq_2.66.orig.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/dnsmasq_2.66.orig.tar.gz
+    
+    - workdir: dnsmasq-2.66.orig
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - sed -i -r 's/^(PREFIX[[:space:]]*=).*$/\1/' Makefile
+        - CC=x86_64-linux-gcc make all install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh sbin
