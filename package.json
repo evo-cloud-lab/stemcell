@@ -1,0 +1,25 @@
+{
+    "name": "evo-stemcell",
+    "description": "Evo Cloud Stemcell",
+    "version": "0.0.1",
+    "author": "Yisui Hu <easeway@gmail.com>",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/evo-cloud/stemcell"
+    },
+    "devDependencies": {
+        "incubator": "git://github.com/evo-cloud/incubator",
+        "grunt": "~0.4.1"
+    },
+    "engines": {
+        "node": ">=0.10",
+        "npm": "1"
+    },
+    "licenses": [
+        {
+            "type": "GPL",
+            "url": "https://github.com/evo-cloud/stemcell/raw/master/LICENSE"
+        }
+    ]
+}
