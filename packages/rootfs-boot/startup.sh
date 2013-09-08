@@ -34,6 +34,7 @@ detect_hw() {
 # mount default file systems
 mountpoint /proc || mount -t proc  none /proc
 mountpoint /sys  || mount -t sysfs none /sys
+mountpoint /dev/shm || mount -t tmpfs none /dev/shm
 
 detect_hw
 probe_mods btrfs

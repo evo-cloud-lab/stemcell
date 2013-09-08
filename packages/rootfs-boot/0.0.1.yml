@@ -11,12 +11,21 @@ sources:
     - file: startup.conf
       packaged: true
       
+    - file: syslogd.conf
+      packaged: true
+
     - file: network-init.conf
       packaged: true
     
     - file: network-init.sh
       packaged: true
     
+    - file: network-interface.conf
+      packaged: true
+    
+    - file: network-interface.sh
+      packaged: true
+
     - file: console.conf
       packaged: true
 
@@ -30,6 +39,9 @@ sources:
       packaged: true
 
     - file: udhcpc-script.sh
+      packaged: true
+
+    - file: zcip-script.sh
       packaged: true
 
     - file: passwd.txt
@@ -58,3 +70,5 @@ build:
         - cp $_PKGDIR/issue.txt $_RELDIR/root/etc/issue
         - cp $_PKGDIR/passwd.txt $_RELDIR/root/etc/passwd
         - cp $_PKGDIR/group.txt $_RELDIR/root/etc/group
+        # for upstart logs
+        - mkdir -p $_RELDIR/root/var/log/upstart

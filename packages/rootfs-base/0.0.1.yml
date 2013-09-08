@@ -6,7 +6,7 @@ package:
 
 build:
     - commands:
-        - for d in dev mnt proc sys var tmp ; do mkdir -p $_RELDIR/root/$d ; done
+        - for d in dev/shm mnt proc sys var tmp ; do mkdir -p $_RELDIR/root/$d ; done
         - mkdir -p $_RELDIR/root/lib/modules
         - mkdir -p $_RELDIR/root/lib/firmware
 
