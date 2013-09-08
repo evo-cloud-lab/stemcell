@@ -32,6 +32,6 @@ build:
         - sed -i -r "s!^CFLAGS[[:space:]]+\\+=!CFLAGS += -I$_RELBASE/$_DEP_ATTR/dev/include !" Make.Rules
         - sed -i -r "s!^LDFLAGS[[:space:]]+\\+=!LDFLAGS += -L$_RELBASE/$_DEP_ATTR/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ATTR/dev/lib !" Make.Rules
         - make prefix=/ lib=lib
-        - make install lib=lib RAISE_SETFCAP=no DESTDIR=$_RELDIR/dev
+        - make install prefix=/ lib=lib RAISE_SETFCAP=no DESTDIR=$_RELDIR/dev
         - $SHELL $_PKGDIR/../../scripts/relso.sh lib
         - $SHELL $_PKGDIR/../../scripts/relbin.sh sbin

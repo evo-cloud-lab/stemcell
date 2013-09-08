@@ -61,6 +61,9 @@ build:
             rmdir $_RELDIR/root/lib
             ln -s lib64 $_RELDIR/root/lib
             
+            # make a /usr link
+            ln -s / $_RELDIR/root/usr
+            
             $_RELBASE/$_DEP_TC_SQUASHFS/mksquashfs $_RELDIR/root $_RELDIR/rootfs.squashfs -comp xz -no-xattrs -all-root -noappend -no-progress
       commands:
         - fakeroot $SHELL $_BLDDIR/root.sh
