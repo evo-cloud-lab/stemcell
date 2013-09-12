@@ -11,19 +11,25 @@ sources:
     - file: startup.conf
       packaged: true
       
+    - file: klogd.conf
+      packaged: true
+
     - file: syslogd.conf
       packaged: true
 
     - file: network-init.conf
       packaged: true
     
-    - file: network-init.sh
+    - file: net-if-init.conf
       packaged: true
     
-    - file: network-interface.conf
+    - file: net-if-changed.conf
       packaged: true
     
-    - file: network-interface.sh
+    - file: net-if-changed.sh
+      packaged: true
+
+    - file: net-br.conf
       packaged: true
 
     - file: console.conf
@@ -36,6 +42,9 @@ sources:
       packaged: true
     
     - file: tty3.conf
+      packaged: true
+
+    - file: udhcpc-init.sh
       packaged: true
 
     - file: udhcpc-script.sh

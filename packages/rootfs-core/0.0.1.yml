@@ -15,6 +15,7 @@ package:
         - libnih
         - json-c
         - expat
+        - bash
         - dbus
         - openssl
         - openssh

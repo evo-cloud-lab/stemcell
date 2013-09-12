@@ -14,6 +14,7 @@ package:
         - libnih
         - json-c
         - expat
+        - bash        
         - dbus
         - openssl
         - openssh
@@ -29,7 +30,6 @@ package:
         - syslinux
         - lxc
         - redis
-        - bash
         - make
         - python
         - tc-squashfs
