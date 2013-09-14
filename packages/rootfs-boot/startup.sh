@@ -38,6 +38,7 @@ mountpoint /dev/shm || mount -t tmpfs none /dev/shm
 
 detect_hw
 probe_mods btrfs
+[ -f /sys/class/net/bonding_masters ] || probe_mods bonding max_bonds=0
 
 # mount fstab
 [ -f /etc/fstab ] && mount -a

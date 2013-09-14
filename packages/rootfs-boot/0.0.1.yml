@@ -29,7 +29,7 @@ sources:
     - file: net-if-changed.sh
       packaged: true
 
-    - file: net-br.conf
+    - file: net-port.conf
       packaged: true
 
     - file: console.conf

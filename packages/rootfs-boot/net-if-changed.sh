@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 STATEDIR=/var/run/net
 NETWORKS=
 NET_zc_IFLIST=
@@ -61,87 +61,58 @@ scan_if() {
     done
 }
 
-format_brshow() {
-    local brname brid iflist name
-    while read; do
-        name=$(echo "$REPLY" | cut -d , -f 1)
-        if [ -n "$name" ]; then
-            [ -n "$brname" ] && echo "$brname,$brid,$iflist"
-            brname=$name
-            brid=$(echo "$REPLY" | cut -d , -f 2)
-            iflist=$(echo "$REPLY" | cut -d , -f 4)
-        elif [ -n "$brname" ]; then
-            name=$(echo "$REPLY" | cut -d , -f 2)
-            [ -n "$name" ] && iflist="$iflist $name"
-        fi
-    done
-    [ -n "$brname" ] && echo "$brname,$brid,$iflist"
-}
-
-list_bridges() {
-    BRIDGES=
-    local rows name brid iflist
-    for row in $(brctl show | tail -n +2 | sed -r 's/[[:space:]]+/,/g' | format_brshow); do
-        name=$(echo $row | cut -d , -f 1)
-        brid=$(echo $row | cut -d , -f 2)
-        iflist=$(echo $row | cut -d , -f 3)
-        [ "${BRIDGES/$name/}" == "$BRIDGES" ] && BRIDGES="$BRIDGES $name"
-        eval BR_${name}_ID=$brid
-        eval BR_${name}_IFLIST="$iflist"
-    done
-}
-
-create_bridge() {
-    local v_id=BR_${1}_ID
-    if [ -z "${!v_id}" ]; then
-        brctl addbr $1
-        initctl emit net-br-create NETBR=$brname
-    fi
-}
-
-configure_bridge() {
-    local key=$1 brname="br$1"
+configure_bonding() {
+    local key=$1 ifname="bond$1"
     local v_net_iflist=NET_${key}_IFLIST
-    local v_id=BR_${brname}_ID v_iflist=BR_${brname}_IFLIST
+    local v_iflist=BOND_${ifname}_IFLIST
 
-    CONFIG_BRIDGES="${CONFIG_BRIDGES} $brname"
+    CONFIG_BONDING_IFLIST="${CONFIG_BONDING_IFLIST} $ifname"
 
-    create_bridge $brname || return 1
+    if [ "${BONDING_IFLIST/$ifname/}" == "$BONDING_IFLIST" ]; then
+        echo +$ifname >/sys/class/net/bonding_masters || return 1
+        ifconfig $ifname up
+        echo 100 >/sys/class/net/$ifname/bonding/miimon
+        initctl emit net-port-create NETIF=$ifname
+    fi
 
     local changed
 
-    for brif in ${!v_iflist} ; do
+    for bondif in ${!v_iflist} ; do
         if [ "${!v_net_iflist/$brif/}" == "${!v_net_iflist}" ]; then
-            brctl delif $brname $brif
+            ifenslave -d $ifname $bondif
             changed=yes
         fi
     done
 
     for netif in ${!v_net_iflist} ; do
         if [ "${!v_iflist/$netif/}" == "${!v_iflist}" ]; then
-            brctl addif $brname $netif
+            ifenslave $ifname $netif
             changed=yes
         fi
     done
 
-    [ -n "$changed" ] && initctl emit -n net-br-changed NETBR=$brname
+    [ -n "$changed" ] && initctl emit -n net-port-changed NETIF=$ifname
 }
 
-setup_bridges() {
-    list_bridges
-    CONFIG_BRIDGES=
-    for network in $NETWORKS; do
-        configure_bridge $network
+setup_bonds() {
+    BONDING_IFLIST=$(cat /sys/class/net/bonding_masters)
+    CONFIG_BONDING_IFLIST=
+    local network ifname
+    for ifname in $BONDING_IFLIST; do
+        eval BOND_${ifname}_IFLIST="$(cat /sys/class/net/$ifname/bonding/slaves)"
     done
-    configure_bridge zc
-    for br in $BRIDGES; do
-        if [ "${CONFIG_BRIDGES/$br/}" == "${CONFIG_BRIDGES}" ]; then
-            initctl emit net-br-remove NETBR=$br
-            ifconfig $br down
-            brctl delbr $br
+    for network in $NETWORKS; do
+        configure_bonding $network
+    done
+    configure_bonding zc
+    for ifname in $BONDING_LIST; do
+        if [ "${CONFIG_BONDING_IFLIST/$ifname/}" == "${CONFIG_BONDING_IFLIST}" ]; then
+            initctl emit net-port-remove NETIF=$ifname
+            ifconfig $ifname down
+            echo -$ifname >/sys/class/net/bonding_masters
         fi
     done
 }
 
 scan_if
-setup_bridges
+setup_bonds
