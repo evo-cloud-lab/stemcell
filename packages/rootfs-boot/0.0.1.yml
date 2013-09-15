@@ -47,6 +47,9 @@ sources:
     - file: init/tty4.conf
       packaged: true
 
+    - file: scripts/terminal.sh
+      packaged: true
+
     - file: scripts/udhcpc-init.sh
       packaged: true
 
@@ -68,6 +71,12 @@ sources:
     - file: issue.txt
       packaged: true
       
+    - file: profile.txt
+      packaged: true
+
+    - file: bash.bashrc
+      packaged: true
+
     - file: init/cloud.conf
       packaged: true
     
@@ -81,6 +90,9 @@ sources:
       packaged: true
     
     - file: cloud.d/logger.conf
+      packaged: true
+    
+    - file: bashrc.d/cloud.bashrc
       packaged: true
 
 build:
@@ -99,5 +111,8 @@ build:
         - cp $_PKGDIR/issue.txt $_RELDIR/root/etc/issue
         - cp $_PKGDIR/passwd.txt $_RELDIR/root/etc/passwd
         - cp $_PKGDIR/group.txt $_RELDIR/root/etc/group
+        - cp $_PKGDIR/profile.txt $_RELDIR/root/etc/profile
+        - cp $_PKGDIR/bash.bashrc $_RELDIR/root/etc/
+        - cp -rf $_PKGDIR/bashrc.d $_RELDIR/root/etc/
         # for upstart logs
         - mkdir -p $_RELDIR/root/var/log/upstart

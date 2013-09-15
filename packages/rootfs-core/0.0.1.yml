@@ -18,7 +18,6 @@ package:
         - bash
         - dbus
         - openssl
-        - openssh
         - busybox
         - dnsmasq
         - upstart
@@ -28,7 +27,6 @@ package:
         - lxc
         - redis
         - nodejs
-        - node-pm2
         - tc-squashfs
         - rootfs-base
         - rootfs-boot
