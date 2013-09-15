@@ -27,6 +27,7 @@ package:
         - lxc
         - redis
         - nodejs
+        - node-evo-cloud
         - tc-squashfs
         - rootfs-base
         - rootfs-boot

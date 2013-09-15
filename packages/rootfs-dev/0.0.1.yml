@@ -25,6 +25,7 @@ package:
         - squashfs
         - nodejs
         - node-pm2
+        - node-evo-cloud
         - binutils
         - gcc
         - syslinux

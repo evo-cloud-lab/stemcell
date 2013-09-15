@@ -1,0 +1,32 @@
+---
+package:
+    name: node-evo-cloud
+    description: Node.js package evo-cloud
+    version: 0.0.1
+    dependencies:
+        - nodejs
+        - tc-python
+        - tc-linux
+
+build:
+    - paths:
+        - dep: tc-linux
+          dir: bin
+        - dep: tc-python
+          dir: bin
+      env:
+        CC:  x86_64-linux-gcc
+        CPP: x86_64-linux-gcc -E
+        CXX: x86_64-linux-g++
+        AS:  x86_64-linux-as
+        AR:  x86_64-linux-ar
+        RANLIB: x86_64-linux-ranlib
+        LD:  x86_64-linux-g++
+        LINK: x86_64-linux-g++
+        STRIP: x86_64-linux-strip
+        OBJCOPY: x86_64-linux-objcopy
+        OBJDUMP: x86_64-linux-objdump
+        NM: x86_64-linux-nm
+      commands:
+        - npm install evo-cloud@0.0.1 -g --prefix=$_RELDIR/dev --nodedir=$_RELBASE/$_DEP_NODEJS/src -dd
+        - cp -a $_RELDIR/dev $_RELDIR/rel
