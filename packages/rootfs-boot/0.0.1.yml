@@ -5,52 +5,55 @@ package:
     version: 0.0.1
 
 sources:
-    - file: startup.sh
+    - file: scripts/startup.sh
       packaged: true
 
-    - file: startup.conf
+    - file: init/startup.conf
       packaged: true
       
-    - file: klogd.conf
+    - file: init/klogd.conf
       packaged: true
 
-    - file: syslogd.conf
+    - file: init/syslogd.conf
       packaged: true
 
-    - file: network-init.conf
+    - file: init/network-init.conf
       packaged: true
     
-    - file: net-if-init.conf
+    - file: init/net-if-init.conf
       packaged: true
     
-    - file: net-if-changed.conf
+    - file: init/net-if-changed.conf
       packaged: true
     
-    - file: net-if-changed.sh
+    - file: scripts/net-if-changed.sh
       packaged: true
 
-    - file: net-port.conf
+    - file: init/net-port.conf
       packaged: true
 
-    - file: console.conf
+    - file: init/console.conf
       packaged: true
 
-    - file: tty1.conf
+    - file: init/tty1.conf
       packaged: true
     
-    - file: tty2.conf
+    - file: init/tty2.conf
       packaged: true
     
-    - file: tty3.conf
+    - file: init/tty3.conf
       packaged: true
 
-    - file: udhcpc-init.sh
+    - file: init/tty4.conf
       packaged: true
 
-    - file: udhcpc-script.sh
+    - file: scripts/udhcpc-init.sh
       packaged: true
 
-    - file: zcip-script.sh
+    - file: scripts/udhcpc-script.sh
+      packaged: true
+
+    - file: scripts/zcip-script.sh
       packaged: true
 
     - file: passwd.txt
@@ -64,16 +67,33 @@ sources:
     
     - file: issue.txt
       packaged: true
+      
+    - file: init/cloud.conf
+      packaged: true
+    
+    - file: init/cloud-svc.conf
+      packaged: true
+      
+    - file: cloud.env
+      packaged: true
+      
+    - file: cloud.d/common.conf
+      packaged: true
+    
+    - file: cloud.d/logger.conf
+      packaged: true
 
 build:
     - commands:
-        # create etc template
-        - mkdir -p $_RELDIR/root/etc/init
-        - mkdir -p $_RELDIR/root/etc/scripts
+        # make sure /etc exists
+        - mkdir -p $_RELDIR/root/etc
         # create init script and services
-        - cp $_PKGDIR/*.conf $_RELDIR/root/etc/init/
-        - cp $_PKGDIR/*.sh $_RELDIR/root/etc/scripts/
+        - cp -rf $_PKGDIR/init $_RELDIR/root/etc/
+        - cp -rf $_PKGDIR/scripts $_RELDIR/root/etc/
         - chmod a+rx $_RELDIR/root/etc/scripts/*.sh
+        # cloud configurations
+        - cp $_PKGDIR/cloud.env $_RELDIR/root/etc/
+        - cp -rf $_PKGDIR/cloud.d $_RELDIR/root/etc/
         # other files
         - cp $_PKGDIR/banner.txt $_RELDIR/root/etc/banner
         - cp $_PKGDIR/issue.txt $_RELDIR/root/etc/issue

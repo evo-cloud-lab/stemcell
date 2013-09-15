@@ -18,6 +18,9 @@ sources:
 build:
     - commands:
         - tar zxf $_SRCDIR/node-v0.10.15.tar.gz
+        # disable SO_REUSEPORT as it may cause compatibility issue when running
+        # built stemcell inside a container with a host running Linux kernel earlier than 3.9
+        - "sed -i '/#include <unistd.h>/a #undef SO_REUSEPORT' node-v0.10.15/deps/uv/src/unix/udp.c"
         - cp -rf node-v0.10.15 $_RELDIR/src
     
     - workdir: node-v0.10.15
