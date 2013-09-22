@@ -9,7 +9,7 @@
         "url": "https://github.com/evo-cloud/stemcell"
     },
     "devDependencies": {
-        "incubator": "git://github.com/evo-cloud/incubator",
+        "incubator": "0.0.3",
         "grunt": "~0.4.1"
     },
     "engines": {

@@ -8,9 +8,9 @@ module.exports = function (grunt) {
     grunt.registerTask('incubate', 'Build Stemcell packages', function () {
         var pkgs = [].slice.call(arguments, 0),
             done = this.async();
-        spawn(path.join(NPM_BIN, 'incubate'),
-              ['--package-path=' + PKG_DIR].concat(pkgs),
-              { stdio: 'inherit' })
+        var args = ['--package-path=' + PKG_DIR].concat(pkgs);
+        grunt.option('no-color') && args.unshift('--script');
+        spawn(path.join(NPM_BIN, 'incubate'), args, { stdio: 'inherit' })
             .on('exit', function (code) {
                 done(code == 0);
             });
