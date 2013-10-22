@@ -1,0 +1,29 @@
+---
+package:
+    name: leveldb
+    version: 1.14.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: leveldb-1.14.0.tar.gz
+      digest: sha1:641d54df4aaf7ee569ae003cfbdb888ebdee0d7f
+      origins:
+        - http://leveldb.googlecode.com/files/leveldb-1.14.0.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/leveldb-1.14.0.tar.gz
+    
+    - workdir: leveldb-1.14.0
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - make CC=x86_64-linux-gcc CXX=x86_64-linux-g++ TARGET_OS=Linux all leveldbutil
+        - mkdir -p $_RELDIR/dev/lib $_RELDIR/dev/bin
+        - cp -rf include $_RELDIR/dev/
+        - cp -a libleveldb.so libleveldb.so.* libleveldb.a $_RELDIR/dev/lib/
+        - cp -a leveldbutil $_RELDIR/dev/bin/
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin        

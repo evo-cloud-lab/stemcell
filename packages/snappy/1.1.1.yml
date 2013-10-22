@@ -1,0 +1,27 @@
+---
+package:
+    name: snappy
+    description: A compression/decompression library
+    version: 1.1.1
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: snappy-1.1.1.tar.gz
+      digest: sha1:2988f1227622d79c1e520d4317e299b61d042852
+      origins:
+        - http://snappy.googlecode.com/files/snappy-1.1.1.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/snappy-1.1.1.tar.gz
+    
+    - workdir: snappy-1.1.1
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+        - make
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

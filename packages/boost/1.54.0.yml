@@ -1,0 +1,41 @@
+---
+package:
+    name: boost
+    description: The C++ Library
+    version: 1.54.0
+    dependencies:
+        - tc-linux
+        - tc-python
+        - bzip2
+        - zlib
+
+sources:
+    - file: boost_1_54_0.tar.bz2
+      digest: sha1:230782c7219882d0fab5f1effbe86edb85238bf4
+      origins:
+        - http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/boost_1_54_0.tar.bz2
+    
+    - workdir: boost_1_54_0
+      paths:
+        - dep: tc-linux
+          dir: bin
+        - dep: tc-python
+          dir: bin
+      commands:
+        - ./bootstrap.sh --prefix=/ --without-icu
+        - 'echo "using gcc : 4.8.1 : x86_64-linux-g++ ;" >tools/build/v2/user-config.jam'
+        - >
+            ./b2 -d+2
+            toolset=gcc
+            link=static
+            include=$_RELBASE/$_DEP_BZIP2/dev/include
+            include=$_RELBASE/$_DEP_ZLIB/dev/include
+            cxxflags=-fPIC
+            --prefix=$_RELDIR/dev
+            $(test -n "$MAKE_CONC" && echo -j $MAKE_CONC)
+            $(test -n "$MAKE_CONC_BOOST" && echo -j $MAKE_CONC_BOOST)
+            install

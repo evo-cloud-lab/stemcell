@@ -26,11 +26,11 @@ build:
         - cp -f $_PKGDIR/config-3.10.0 .config
         - make olddefconfig
         - make headers_install INSTALL_HDR_PATH=$_RELDIR
-        - make bzImage V=1
+        - make $(test -n "$MAKE_CONC" && echo -j$MAKE_CONC) $(test -n "$MAKE_CONC_KERNEL" && echo -j$MAKE_CONC_KERNEL) bzImage V=1
         - cp -f arch/x86/boot/compressed/vmlinux $_RELDIR/
         - cp -f arch/x86/boot/compressed/vmlinux.bin $_RELDIR/
         - cp -f arch/x86/boot/bzImage $_RELDIR/
-        - make modules V=1
+        - make $(test -n "$MAKE_CONC" && echo -j$MAKE_CONC) $(test -n "$MAKE_CONC_KERNEL" && echo -j$MAKE_CONC_KERNEL) modules V=1
         - make modules_install INSTALL_MOD_PATH=$_RELDIR
         - make firmware_install INSTALL_MOD_PATH=$_RELDIR
     

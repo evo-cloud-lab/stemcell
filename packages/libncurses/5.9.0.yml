@@ -1,0 +1,25 @@
+---
+package:
+    name: libncurses
+    version: 5.9.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: ncurses-5.9.tar.gz
+      digest: sha1:3e042e5f2c7223bffdaac9646a533b8c758b65b5
+      origins:
+        - http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/ncurses-5.9.tar.gz
+    
+    - workdir: ncurses-5.9
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+        - make
+        - make install DESTDIR=$_RELDIR/dev

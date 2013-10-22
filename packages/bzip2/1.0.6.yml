@@ -1,0 +1,27 @@
+---
+package:
+    name: bzip2
+    description: Compression Utility
+    version: 1.0.6
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: bzip2-1.0.6.tar.gz
+      digest: sha1:3f89f861209ce81a6bab1fd1998c0ef311712002
+      origins:
+        - http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/bzip2-1.0.6.tar.gz
+    
+    - workdir: bzip2-1.0.6
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - sed -i -r 's/^(CC[[:space:]]+:=).+$/\1 x86_64-linux-gcc/' Makefile
+        - sed -i -r 's/^(AR[[:space:]]+:=).+$/\1 x86_64-linux-ar/' Makefile
+        - 'sed -i -r "s!^(RANLIB[[:space:]]+:=).+\$!\\1 $_RELBASE/$_DEP_TC_LINUX/bin/x86_64-linux-ranlib!" Makefile'
+        - make install PREFIX=$_RELDIR/dev

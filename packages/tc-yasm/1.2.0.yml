@@ -1,0 +1,21 @@
+---
+package:
+    name: tc-yasm
+    description: A Modular Assembler Project
+    version: 1.2.0
+
+sources:
+    - file: yasm-1.2.0.tar.gz
+      digest: sha1:773d28f27f83c44ac35079add0d3167ca6c1def8
+      origins:
+        - http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/yasm-1.2.0.tar.gz
+    
+    - workdir: yasm-1.2.0
+      commands:
+        - ./configure --prefix=$_RELDIR
+        - make
+        - make install 

@@ -1,0 +1,24 @@
+---
+package:
+    name: libaio
+    version: 0.3.109
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: libaio_0.3.109.orig.tar.gz
+      digest: sha1:9ddbaff067ba377104251e3a84d9588498f9fedf
+      origins:
+        - http://launchpad.net/ubuntu/+archive/primary/+files/libaio_0.3.109.orig.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libaio_0.3.109.orig.tar.gz
+    
+    - workdir: libaio-0.3.109
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - make install prefix=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

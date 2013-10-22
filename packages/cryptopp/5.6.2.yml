@@ -1,0 +1,26 @@
+---
+package:
+    name: cryptopp
+    description: A crypto library for C++
+    version: 5.6.2
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: cryptopp562.zip
+      digest: sha1:ddc18ae41c2c940317cd6efe81871686846fa293
+      origins:
+        - http://prdownloads.sourceforge.net/cryptopp/cryptopp562.zip
+
+build:
+    - paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - unzip -o $_SRCDIR/cryptopp562.zip
+        - sed -i -r 's/^(RANLIB[[:space:]]+:=).+$/\1 x86_64-linux-ranlib/' GNUmakefile
+        - make CXX='x86_64-linux-g++ -fPIC' static dynamic
+        - mkdir -p $_RELDIR/dev/lib $_RELDIR/dev/include/cryptopp
+        - cp -a lib*.a lib*.so $_RELDIR/dev/lib/
+        - cp *.h $_RELDIR/dev/include/cryptopp/
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

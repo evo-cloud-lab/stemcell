@@ -1,0 +1,26 @@
+---
+package:
+    name: libatomic_ops
+    description: Atomic memory update operations on a number of architectures
+    version: 7.2.0+d
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: libatomic_ops-7.2d.tar.gz
+      digest: sha1:ed5bb963648bdfb87fc815a9037114654d164907
+      origins:
+        - http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-7.2d.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libatomic_ops-7.2d.tar.gz
+    
+    - workdir: libatomic_ops-7.2
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+        - make
+        - make install DESTDIR=$_RELDIR/dev

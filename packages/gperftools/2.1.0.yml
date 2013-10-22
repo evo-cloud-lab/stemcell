@@ -1,0 +1,33 @@
+---
+package:
+    name: gperftools
+    description: Google Performance Tools
+    version: 2.1.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: gperftools-2.1.tar.gz
+      digest: sha1:b799b99d9f021988bbc931db1c21b2f94826d4f0
+      origins:
+        - http://gperftools.googlecode.com/files/gperftools-2.1.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/gperftools-2.1.tar.gz
+    
+    - workdir: gperftools-2.1
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - >
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+            --disable-silent-rules
+            --disable-cpu-profiler
+            --disable-heap-profiler
+            --disable-heap-checker
+            --disable-debugalloc
+        - make
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib        

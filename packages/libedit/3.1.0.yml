@@ -1,0 +1,31 @@
+---
+package:
+    name: libedit
+    description: "An autotool- and libtoolized port of the NetBSD Editline library (libedit)"
+    version: 3.1.0
+    dependencies:
+        - tc-linux
+        - libncurses
+
+sources:
+    - file: libedit-20130712-3.1.tar.gz
+      digest: sha1:6bb65d88244a89680cec73682093f66c01a8a9b9
+      origins:
+        - http://thrysoee.dk/editline/libedit-20130712-3.1.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/libedit-20130712-3.1.tar.gz
+    
+    - workdir: libedit-20130712-3.1
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - >
+            CPPFLAGS=-I$_RELBASE/$_DEP_LIBNCURSES/dev/include
+            LIBS="-L$_RELBASE/$_DEP_LIBNCURSES/dev/lib -lncurses"
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux --disable-shared --enable-static --enable-silent-rules
+        - make
+        - make install DESTDIR=$_RELDIR/dev
+        

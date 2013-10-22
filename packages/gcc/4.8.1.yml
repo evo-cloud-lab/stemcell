@@ -34,6 +34,6 @@ build:
             --with-mpc=$_RELBASE/$_DEP_MPC/dev
             --disable-nls
             --enable-languages=c,c++
-        - make
+        - make $(test -n "$MAKE_CONC" && echo -j$MAKE_CONC) $(test -n "$MAKE_CONC_GCC" && echo -j$MAKE_CONC_GCC)
         - make install DESTDIR=$_RELDIR/dev
         - $SHELL $_PKGDIR/../../scripts/relso.sh lib32 lib64

@@ -8,4 +8,4 @@ cloud_prompt() {
     fi
 }
 
-export PROMPT_COMMAND=cloud_prompt
+#export PROMPT_COMMAND=cloud_prompt

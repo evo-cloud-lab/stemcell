@@ -1,0 +1,84 @@
+---
+package:
+    name: ceph
+    description: Distributed Object Storage
+    version: 0.71.0
+    dependencies:
+        - tc-linux
+        - tc-yasm
+        - tc-python
+        - cryptopp
+        - libatomic_ops
+        - libedit
+        - libncurses
+        - libaio
+        - leveldb
+        - keyutils
+        - e2fsprogs
+        - snappy
+        - boost
+
+sources:
+    - file: ceph-0.71.tar.bz2
+      digest: sha1:797eb5945e7f066ffd5a451cac1e3c50fca1ff78
+      origins:
+        - http://ceph.com/download/ceph-0.71.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/ceph-0.71.tar.bz2
+    
+    - workdir: ceph-0.71
+      paths:
+        - dep: tc-linux
+          dir: bin
+        - dep: tc-python
+          dir: bin
+        - dep: tc-yasm
+          dir: bin
+      commands:
+        - >
+            CRYPTOPP_CFLAGS=-I$_RELBASE/$_DEP_CRYPTOPP/dev/include
+            CRYPTOPP_LIBS="-L$_RELBASE/$_DEP_CRYPTOPP/dev/lib -lcryptopp"
+            LIBEDIT_CFLAGS="-I$_RELBASE/$_DEP_LIBEDIT/dev/include -I$_RELBASE/$_DEP_LIBNCURSES/dev/include"
+            LIBEDIT_LIBS="-L$_RELBASE/$_DEP_LIBEDIT/dev/lib -L$_RELBASE/$_DEP_LIBNCURSES/dev/lib -ledit -lncurses"
+            CPPFLAGS="
+            -I$_RELBASE/$_DEP_CRYPTOPP/dev/include
+            -I$_RELBASE/$_DEP_LIBATOMIC_OPS/dev/include
+            -I$_RELBASE/$_DEP_LIBEDIT/dev/include
+            -I$_RELBASE/$_DEP_LIBNCURSES/dev/include
+            -I$_RELBASE/$_DEP_LIBAIO/dev/include
+            -I$_RELBASE/$_DEP_LEVELDB/dev/include
+            -I$_RELBASE/$_DEP_KEYUTILS/dev/include
+            -I$_RELBASE/$_DEP_E2FSPROGS/dev/include
+            -I$_RELBASE/$_DEP_SNAPPY/dev/include
+            -I$_RELBASE/$_DEP_BOOST/dev/include
+            "
+            LDFLAGS="
+            -L$_RELBASE/$_DEP_CRYPTOPP/dev/lib
+            -L$_RELBASE/$_DEP_LIBATOMIC_OPS/dev/lib
+            -L$_RELBASE/$_DEP_LIBEDIT/dev/lib
+            -L$_RELBASE/$_DEP_LIBNCURSES/dev/lib
+            -L$_RELBASE/$_DEP_LIBAIO/dev/lib
+            -L$_RELBASE/$_DEP_LEVELDB/dev/lib
+            -L$_RELBASE/$_DEP_KEYUTILS/dev/lib
+            -L$_RELBASE/$_DEP_E2FSPROGS/dev/lib
+            -L$_RELBASE/$_DEP_SNAPPY/dev/lib
+            -L$_RELBASE/$_DEP_BOOST/dev/lib
+            "
+            LD_LIBRARY_PATH="$_RELBASE/$_DEP_SNAPPY/rel/lib:$_RELBASE/$_DEP_LEVELDB/rel/lib:$_RELBASE/$_DEP_BOOST/rel/lib"
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+            --disable-static
+            --disable-silent-rules
+            --disable-cephfs-java
+            --without-rados-gw
+            --without-fuse
+            --without-tcmalloc
+            --without-ocf
+            --without-rest-bench
+            --without-libzfs
+        - make $(test -n "$MAKE_CONC" && echo -j$MAKE_CONC) $(test -n "$MAKE_CONC_CEPH" && echo -j$MAKE_CONC_CEPH)
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin sbin
+        

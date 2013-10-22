@@ -21,8 +21,11 @@ build:
         - dep: tc-linux
           dir: bin
       commands:
-        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux --disable-nls
+        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux --disable-nls --enable-elf-shlibs --enable-verbose-makecmds
         - make
         - make install DESTDIR=$_RELDIR/dev
+        - mkdir -p $_RELDIR/dev/include/uuid
+        - cp lib/uuid/uuid.h $_RELDIR/dev/include/uuid/
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
         - $SHELL $_PKGDIR/../../scripts/relbin.sh bin sbin
         - $SHELL $_PKGDIR/../../scripts/reldir.sh etc 
