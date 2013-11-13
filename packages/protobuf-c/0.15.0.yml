@@ -1,0 +1,36 @@
+---
+package:
+    name: protobuf-c
+    description: Protocol Buffers C binding
+    version: 0.15.0
+    dependencies:
+        - protobuf
+        - tc-linux
+        - tc-protobuf
+
+sources:
+    - file: protobuf-c-0.15.tar.gz
+      digest: sha1:4fbd93f492c52154713de1951c0a2133ddd43abb
+      origins:
+        - http://protobuf-c.googlecode.com/files/protobuf-c-0.15.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/protobuf-c-0.15.tar.gz
+    
+    - workdir: protobuf-c-0.15
+      paths:
+        - dep: tc-linux
+          dir: bin
+        - dep: tc-protobuf
+          dir: bin
+      commands:
+        - >
+            CPPFLAGS=-I$_RELBASE/$_DEP_PROTOBUF/dev/include
+            LDFLAGS=-L$_RELBASE/$_DEP_PROTOBUF/dev/lib
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+            --disable-protoc
+        - make
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/lib*.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

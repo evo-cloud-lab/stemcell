@@ -13,12 +13,16 @@ package:
         - libapparmor
         - libnih
         - json-c
+        - protobuf
+        - protobuf-c
         - expat
+        - db
         - bash        
         - dbus
         - openssl
         - openssh
         - busybox
+        - iproute2
         - dnsmasq
         - upstart
         - e2fsprogs
@@ -30,6 +34,7 @@ package:
         - gcc
         - syslinux
         - lxc
+        - criu
         - redis
         - make
         - python

@@ -1,0 +1,21 @@
+---
+package:
+    name: tc-protobuf
+    description: Google Protocol Buffers Toolchain only
+    version: 2.5.0
+
+sources:
+    - file: protobuf-2.5.0.tar.bz2
+      digest: sha1:62c10dcdac4b69cc8c6bb19f73db40c264cb2726
+      origins:
+        - http://protobuf.googlecode.com/files/protobuf-2.5.0.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/protobuf-2.5.0.tar.bz2
+    
+    - workdir: protobuf-2.5.0
+      commands:
+        - ./configure --prefix=$_RELDIR --disable-shared
+        - make
+        - make install

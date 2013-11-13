@@ -1,0 +1,34 @@
+---
+package:
+    name: iproute2
+    version: 3.10.0
+    dependencies:
+        - db
+        - kernel-headers
+        - tc-linux
+
+sources:
+    - file: iproute2-3.10.0.tar.xz
+      digest: sha1:e94b5dc9dc586006b272f67134ec07f6fbc81bd7
+      origins:
+        - https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-3.10.0.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/iproute2-3.10.0.tar.xz
+    
+    - workdir: iproute2-3.10.0
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - >
+            CC="x86_64-linux-gcc -L$_RELBASE/$_DEP_DB/dev/lib"
+            AR=x86_64-linux-ar
+            ./configure
+        - >
+            make PREFIX=/
+            DBM_INCLUDE=$_RELBASE/$_DEP_DB/dev/include
+            KERNEL_INCLUDE=$_RELBASE/$_DEP_KERNEL_HEADERS/dev/include
+        - make install PREFIX=/ DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh sbin

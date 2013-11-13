@@ -1,0 +1,35 @@
+---
+package:
+    name: criu
+    description: An utility to checkpoint/restore a process tree
+    version: 0.8.0
+    dependencies:
+        - protobuf-c
+        - tc-linux
+        - tc-protobuf-c
+
+sources:
+    - file: criu-0.8.tar.bz2
+      digest: sha1:34faf0fe1c9c954ec4ae3591688700f5746028e2
+      origins:
+        - http://download.openvz.org/criu/criu-0.8.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/criu-0.8.tar.bz2
+    
+    - workdir: criu-0.8
+      paths:
+        - dep: tc-linux
+          dir: bin
+        - dep: tc-protobuf-c
+          dir: bin
+      commands:
+        - >
+            CROSS_COMPILE=x86_64-linux-
+            make all V=1
+            CC="x86_64-linux-gcc -I$_RELBASE/$_DEP_PROTOBUF_C/dev/include -L$_RELBASE/$_DEP_PROTOBUF_C/dev/lib"
+            LD="x86_64-linux-ld -L$_RELBASE/$_DEP_PROTOBUF_C/dev/lib"
+        - mkdir -p $_RELDIR/dev/sbin
+        - install -m 755 criu $_RELDIR/dev/sbin
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh sbin

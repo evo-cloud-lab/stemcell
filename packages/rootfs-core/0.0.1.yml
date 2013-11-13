@@ -14,17 +14,22 @@ package:
         - libapparmor
         - libnih
         - json-c
+        - protobuf
+        - protobuf-c
         - expat
+        - db
         - bash
         - dbus
         - openssl
         - busybox
+        - iproute2
         - dnsmasq
         - upstart
         - e2fsprogs
         - squashfs
         - syslinux
         - lxc
+        - criu
         - redis
         - nodejs
         - node-evo-cloud

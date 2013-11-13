@@ -1,0 +1,28 @@
+---
+package:
+    name: gdbm
+    description: GNU database library
+    version: 1.10.0
+    dependencies:
+        - tc-linux
+
+sources:
+    - file: gdbm-1.10.tar.gz
+      digest: sha1:441201e9145f590ba613f8a1e952455d620e0860
+      origins:
+        - http://ftpmirror.gnu.org/gdbm/gdbm-1.10.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/gdbm-1.10.tar.gz
+    
+    - workdir: gdbm-1.10
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux --disable-silent-rules --enable-libgdbm-compat
+        - make
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/lib*.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib

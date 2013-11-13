@@ -4,6 +4,7 @@ package:
     description: Linux kernel
     version: 3.10.0
     dependencies:
+        - tc-linux
         - tc-squashfs
 
 sources:
@@ -22,6 +23,12 @@ build:
         - make -C linux-3.10 defconfig O=$_BLDDIR/linux
     
     - workdir: linux
+      paths:
+        - dep: tc-linux
+          dir: bin
+      env:
+        ARCH: x86_64
+        CROSS_COMPILE: x86_64-linux-
       commands:
         - cp -f $_PKGDIR/config-3.10.0 .config
         - make olddefconfig

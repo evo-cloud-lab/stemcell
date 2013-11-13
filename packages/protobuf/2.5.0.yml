@@ -1,0 +1,31 @@
+---
+package:
+    name: protobuf
+    description: Google Protocol Buffers
+    version: 2.5.0
+    dependencies:
+        - tc-linux
+        - tc-protobuf
+
+sources:
+    - file: protobuf-2.5.0.tar.bz2
+      digest: sha1:62c10dcdac4b69cc8c6bb19f73db40c264cb2726
+      origins:
+        - http://protobuf.googlecode.com/files/protobuf-2.5.0.tar.bz2
+
+build:
+    - commands:
+        - tar jxf $_SRCDIR/protobuf-2.5.0.tar.bz2
+    
+    - workdir: protobuf-2.5.0
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - >
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+            --with-protoc=$_RELBASE/$_DEP_TC_PROTOBUF/bin/protoc
+        - make
+        - make install DESTDIR=$_RELDIR/dev
+        - -rm -f $_RELDIR/dev/lib/lib*.la
+        - $SHELL $_PKGDIR/../../scripts/relso.sh lib
