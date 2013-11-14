@@ -13,6 +13,9 @@ sources:
     - file: mkinitrd.sh
       packaged: true
 
+    - file: functions.sh
+      packaged: true
+
     - file: init.sh
       packaged: true
       

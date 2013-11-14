@@ -14,6 +14,7 @@ tar -C $ROOTDIR -xf $_RELBASE/$_DEP_ROOTFS_BASE/rootfs.tar
 cp -a $_RELBASE/$_DEP_BUSYBOX_INITRD/rel/* $ROOTDIR/
 
 cp $_PKGDIR/udhcpc-script.sh $ROOTDIR/etc/
+cp $_PKGDIR/functions.sh     $ROOTDIR/etc/
 chmod a+rx $ROOTDIR/etc/udhcpc-script.sh
 
 TAG=$(date '+%Y%m%d%H%M%S')
@@ -25,6 +26,10 @@ KVER=$(basename $(find $_RELBASE/$_DEP_KERNEL/lib/modules -mindepth 1 -maxdepth 
 MODSRC=$_RELBASE/$_DEP_KERNEL/stripped/lib/modules/$KVER/kernel
 MODDST=$ROOTDIR/lib/modules/$KVER/kernel
 MODULES='
+    net/9p
+    drivers/char/virtio_console.ko
+    drivers/char/hw_random/virtio-rng.ko
+    drivers/virtio
     drivers/ata
     drivers/net/ethernet
     drivers/net/usb
@@ -32,6 +37,7 @@ MODULES='
     drivers/usb/class
     drivers/usb/host
     drivers/usb/storage
+    fs/9p
     fs/isofs
     fs/squashfs
     fs/binfmt_misc.ko
