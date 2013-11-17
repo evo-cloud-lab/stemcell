@@ -1,0 +1,35 @@
+---
+package:
+    name: openvswitch
+    description: A production quality multilayer virtual switch
+    version: 2.0.0
+    dependencies:
+        - openssl
+        - zlib
+        - tc-linux
+
+sources:
+    - file: openvswitch-2.0.0.tar.gz
+      digest: sha1:3ce3f0bb96bfc79fdaf7a325ca1287803324eae7
+      origins:
+        - http://openvswitch.org/releases/openvswitch-2.0.0.tar.gz
+
+build:
+    - commands:
+        - tar zxf $_SRCDIR/openvswitch-2.0.0.tar.gz
+    
+    - workdir: openvswitch-2.0.0
+      paths:
+        - dep: tc-linux
+          dir: bin
+      commands:
+        - >
+            CC=x86_64-linux-gcc
+            CPPFLAGS="-I$_RELBASE/$_DEP_OPENSSL/dev/include"
+            LDFLAGS="-L$_RELBASE/$_DEP_OPENSSL/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_ZLIB/dev/lib"
+            ./configure --prefix=/ --build=x86_64-linux --host=x86_64-linux
+            --enable-ndebug
+            --with-openssl=$_RELBASE/$_DEP_OPENSSL/dev
+        - make
+        - make install DESTDIR=$_RELDIR/dev
+        - $SHELL $_PKGDIR/../../scripts/relbin.sh bin sbin

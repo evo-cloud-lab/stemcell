@@ -1,0 +1,21 @@
+---
+package:
+    name: kernel-headers
+    description: Linux kernel headers
+    version: 3.12.0
+
+sources:
+    - file: linux-3.12.tar.xz
+      digest: sha1:de2ceb8cbcfacb8666bfe926159f72e2a9434587
+      origins:
+        - https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.12.tar.xz
+
+build:
+    - commands:
+        - tar Jxf $_SRCDIR/linux-3.12.tar.xz
+        - mkdir -p linux
+        - make -C linux-3.12 x86_64_defconfig O=$_BLDDIR/linux
+    
+    - workdir: linux
+      commands:
+        - make headers_install INSTALL_HDR_PATH=$_RELDIR/dev

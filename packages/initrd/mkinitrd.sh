@@ -27,8 +27,6 @@ MODSRC=$_RELBASE/$_DEP_KERNEL/stripped/lib/modules/$KVER/kernel
 MODDST=$ROOTDIR/lib/modules/$KVER/kernel
 MODULES='
     net/9p
-    drivers/char/virtio_console.ko
-    drivers/char/hw_random/virtio-rng.ko
     drivers/virtio
     drivers/ata
     drivers/net/ethernet
@@ -40,7 +38,6 @@ MODULES='
     fs/9p
     fs/isofs
     fs/squashfs
-    fs/binfmt_misc.ko
     fs/nls/nls_ascii.ko
     fs/nls/nls_iso8859-1.ko
     fs/nls/nls_utf8.ko
