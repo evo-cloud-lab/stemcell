@@ -58,13 +58,19 @@ init_mount_root() {
     mount -t squashfs /mnt/boot/$INIT_ROOTFS_FILE /mnt/root || return 1
     test -n "$opt_no_kmodfs" || mount -t squashfs /mnt/boot/$INIT_KMODFS_FILE /mnt/root/lib/modules || return 1
     test -n "$opt_no_kfmwfs" || mount -t squashfs /mnt/boot/$INIT_KFMWFS_FILE /mnt/root/lib/firmware || return 1
+    # ensure /dev on rootfs is writable
+    mountpoint /mnt/dev >/dev/null 2>&1 && umount /mnt/dev
+    mount -t tmpfs none /mnt/dev
+    cp -a /mnt/root/dev/* /mnt/dev/
+    mount --move /mnt/dev /mnt/root/dev
 }
 
 # umount root file system
 init_umount_root() {
-    mountpoint /mnt/root/lib/firmware && umount /mnt/root/lib/firmware
-    mountpoint /mnt/root/lib/modules && umount /mnt/root/lib/modules
-    mountpoint /mnt/root && umount /mnt/root
+    local mnt
+    for mnt in /mnt/root/dev /mnt/root/lib/firmware /mnt/root/lib/modules /mnt/root ; do
+        mountpoint "$mnt" >/dev/null 2>&1 && umount "$mnt"
+    done
 }
 
 # find and mount boot device

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /etc/scripts/start-funcs.sh
+
 # simple wrapper over modprobe
 probe_mods() {
 	for mod in $@ ; do
@@ -29,20 +31,57 @@ detect_hw() {
 	done
 }
 
+# mount if not mounted
+if_not_mounted() {
+    local mnt="$1"
+    shift;
+    mountpoint "$mnt" >/dev/null 2>&1 || mount "$@" "$mnt"
+}
+
+# normal startup flow (not in container)
+normal_startup() {
+    start_parse_kernel_cmdline
+    detect_hw
+    mdev -s
+    mkdir -p /dev/shm
+    mount -t tmpfs none /dev/shm
+    [ -f /sys/class/net/bonding_masters ] || probe_mods bonding max_bonds=0
+}
+
+# startup flow in a container
+contained_startup() {
+    if_not_mounted /dev/shm -t tmpfs none
+}
+
+# mount extra file systems
+mount_extra_fs() {
+    [ -n "$opt_configmnt" ] && mount "$opt_configmnt" /etc/config
+    [ -f /etc/config/fstab ] && mount -a
+
+    # ensure /tmp and /var are writable
+    local mnt
+    for mnt in /tmp /var ; do
+        if touch $mnt/.writable >/dev/null 2>&1 ; then
+            rm -f $mnt/.writable >/dev/null 2>&1
+        else
+            mount -t tmpfs none $mnt
+        fi
+    done
+}
+
 [ -f /etc/banner ] && cat /etc/banner
 
 # mount default file systems
-mountpoint /proc || mount -t proc  none /proc
-mountpoint /sys  || mount -t sysfs none /sys
-mountpoint /dev/shm || mount -t tmpfs none /dev/shm
+if_not_mounted /proc -t proc none
+if_not_mounted /sys -t sysfs none
 
-detect_hw
-probe_mods btrfs
-[ -f /sys/class/net/bonding_masters ] || probe_mods bonding max_bonds=0
+if start_in_container ; then
+    contained_startup
+else
+    normal_startup
+fi
 
-# mount fstab
-[ -f /etc/fstab ] && mount -a
+mount_extra_fs
 
-# notify other services
-initctl emit sys-boot
-initctl emit sys-init
+# prepare required file system directories
+mkdir -p /var/log/upstart /var/run /var/lib

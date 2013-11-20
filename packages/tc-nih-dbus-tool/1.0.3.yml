@@ -10,6 +10,11 @@ sources:
       origins:
         - http://launchpad.net/libnih/1.0/1.0.3/+download/libnih-1.0.3.tar.gz
 
+    - file: libnih_1.0.3-4ubuntu16.diff.gz
+      digest: sha1:1cbcf56dc649766f1537b46a03f05b341190e6a8
+      origins:
+        - https://launchpad.net/ubuntu/saucy/+source/libnih/1.0.3-4ubuntu16/+files/libnih_1.0.3-4ubuntu16.diff.gz
+
     - file: expat-2.1.0.tar.gz
       digest: sha1:b08197d146930a5543a7b99e871cba3da614f6f0
       origins:
@@ -45,6 +50,7 @@ build:
     
     - workdir: libnih-1.0.3
       commands:
+        - gunzip -c $_SRCDIR/libnih_1.0.3-4ubuntu16.diff.gz | patch -p1        
         - >
             DBUS_CFLAGS="-I$_RELDIR/include/dbus-1.0 -I$_RELDIR/lib/dbus-1.0/include"
             DBUS_LIBS="-L$_RELDIR/lib -ldbus-1"

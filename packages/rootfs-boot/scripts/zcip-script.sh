@@ -16,7 +16,7 @@ do_config() {
 connector:
     address: $ip
     port: 1860
-    broadcast: $(ipcalc -b $ip | sed 's/BROADCAST=//')
+    broadcast: "*$(ipcalc -b $ip | sed 's/BROADCAST=//')"
 EOF
     evo-cloud svc:reload connector
 }

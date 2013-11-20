@@ -29,6 +29,7 @@ package:
         - squashfs
         - syslinux
         - lxc
+        - openvswitch
         - criu
         - redis
         - nodejs

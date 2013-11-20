@@ -15,6 +15,11 @@ sources:
       origins:
         - http://launchpad.net/libnih/1.0/1.0.3/+download/libnih-1.0.3.tar.gz
 
+    - file: libnih_1.0.3-4ubuntu16.diff.gz
+      digest: sha1:1cbcf56dc649766f1537b46a03f05b341190e6a8
+      origins:
+        - https://launchpad.net/ubuntu/saucy/+source/libnih/1.0.3-4ubuntu16/+files/libnih_1.0.3-4ubuntu16.diff.gz
+
 build:
     - commands:
         - tar zxf $_SRCDIR/libnih-1.0.3.tar.gz
@@ -26,6 +31,7 @@ build:
         - dep: tc-nih-dbus-tool
           dir: bin
       commands:
+        - gunzip -c $_SRCDIR/libnih_1.0.3-4ubuntu16.diff.gz | patch -p1
         - >
             DBUS_CFLAGS="-I$_RELBASE/$_DEP_DBUS/dev/include/dbus-1.0 -I$_RELBASE/$_DEP_DBUS/dev/lib/dbus-1.0/include"
             DBUS_LIBS="-L$_RELBASE/$_DEP_DBUS/dev/lib -Wl,-rpath-link -Wl,$_RELBASE/$_DEP_EXPAT/dev/lib -ldbus-1"

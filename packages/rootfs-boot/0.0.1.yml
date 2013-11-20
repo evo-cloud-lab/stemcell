@@ -8,6 +8,9 @@ sources:
     - file: scripts/startup.sh
       packaged: true
 
+    - file: scripts/start-funcs.sh
+      packaged: true
+
     - file: init/startup.conf
       packaged: true
       
@@ -98,7 +101,9 @@ sources:
 build:
     - commands:
         # make sure /etc exists
-        - mkdir -p $_RELDIR/root/etc
+        - mkdir -p $_RELDIR/root/etc/config
+        - echo >$_RELDIR/root/etc/config/fstab
+        - ln -sf config/fstab $_RELDIR/root/etc/fstab
         # create init script and services
         - cp -rf $_PKGDIR/init $_RELDIR/root/etc/
         - cp -rf $_PKGDIR/scripts $_RELDIR/root/etc/

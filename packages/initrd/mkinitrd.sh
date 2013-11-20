@@ -8,6 +8,7 @@ mkdir -p $ROOTDIR/etc
 mkdir -p $ROOTDIR/initrd
 mkdir -p $ROOTDIR/mnt/boot
 mkdir -p $ROOTDIR/mnt/root
+mkdir -p $ROOTDIR/mnt/dev
 
 tar -C $ROOTDIR -xf $_RELBASE/$_DEP_ROOTFS_BASE/rootfs.tar
 
