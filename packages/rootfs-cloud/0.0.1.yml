@@ -1,0 +1,62 @@
+---
+package:
+    name: rootfs-cloud
+    description: Cloud OS Root file system
+    version: 0.0.1
+    dependencies:
+        - node-evo-cloud
+        - tc-squashfs
+        - rootfs-vapor
+
+sources:
+    - file: ../../scripts/merge-deps.sh
+      packaged: true
+    
+    - file: ../../scripts/pack-rootfs.sh
+      packaged: true
+    
+    - file: init/cloud.conf
+      packaged: true
+    
+    - file: init/cloud-svc.conf
+      packaged: true
+      
+    - file: cloud.env
+      packaged: true
+      
+    - file: cloud.d/common.conf
+      packaged: true
+    
+    - file: cloud.d/logger.conf
+      packaged: true
+    
+    - file: bashrc.d/cloud.bashrc
+      packaged: true
+
+    - file: hooks/net/100cloud.sh
+      packaged: true
+
+build:
+    - scripts:
+        root.sh: |
+            set -x
+            set -e
+            #
+            # Merge dependencies
+            #
+            $SHELL $_PKGDIR/../../scripts/merge-deps.sh rel
+            $_RELBASE/$_DEP_TC_SQUASHFS/unsquashfs -f -n -d root $_RELBASE/$_DEP_ROOTFS_VAPOR/rootfs.squashfs
+            #
+            # Copy files
+            #
+            for fn in cloud.env bashrc.d cloud.d init ; do
+                cp -rf $_PKGDIR/$fn root/etc/
+            done
+            cp -rf $_PKGDIR/hooks root/etc/scripts/
+            chmod a+rx root/etc/scripts/hooks/net/100cloud.sh
+            #
+            # pack rootfs
+            #
+            $SHELL $_PKGDIR/../../scripts/pack-rootfs.sh
+      commands:
+        - fakeroot $SHELL $_BLDDIR/root.sh                

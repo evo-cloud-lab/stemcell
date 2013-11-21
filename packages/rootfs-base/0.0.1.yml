@@ -6,9 +6,9 @@ package:
 
 build:
     - commands:
-        - for d in dev/shm mnt proc sys var tmp ; do mkdir -p $_RELDIR/root/$d ; done
-        - mkdir -p $_RELDIR/root/lib/modules
-        - mkdir -p $_RELDIR/root/lib/firmware
+        - for d in dev/shm mnt proc sys var tmp ; do mkdir -p root/$d ; done
+        - mkdir -p root/lib/modules
+        - mkdir -p root/lib/firmware
 
     - scripts:
         root.sh: |
@@ -37,10 +37,10 @@ build:
                 660,loop3,b,7,3                 \
                 660,sr0,b,11,0
             do
-                eval mknod `echo $n | sed "s/,/ /g" | sed -r "s!^([[:digit:]]+)[[:space:]]!-m \\1 $_RELDIR/root/dev/!"`
+                eval mknod `echo $n | sed "s/,/ /g" | sed -r "s!^([[:digit:]]+)[[:space:]]!-m \\1 root/dev/!"`
             done
-            mkdir -m 755 $_RELDIR/root/dev/pts
-            mkdir -m 755 $_RELDIR/root/dev/mapper
-            tar -C $_RELDIR/root -cf $_RELDIR/rootfs.tar .
+            mkdir -m 755 root/dev/pts
+            mkdir -m 755 root/dev/mapper
+            tar -C root -cf $_RELDIR/rootfs.tar .
       commands:
         - fakeroot $SHELL $_BLDDIR/root.sh

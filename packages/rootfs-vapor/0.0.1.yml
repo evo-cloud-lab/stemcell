@@ -1,0 +1,175 @@
+---
+package:
+    name: rootfs-vapor
+    description: Vapor OS root file system
+    version: 0.0.1
+    dependencies:
+        - glibc
+        - gcc
+        - zlib
+        - xz
+        - attr
+        - libcap
+        - libseccomp
+        - libapparmor
+        - libnih
+        - json-c
+        - protobuf
+        - protobuf-c
+        - expat
+        - db
+        - bash
+        - dbus
+        - openssl
+        - busybox
+        - iproute2
+        - dnsmasq
+        - upstart
+        - e2fsprogs
+        - squashfs
+        - syslinux
+        - lxc
+        - openvswitch
+        - criu
+        - redis
+        - nodejs
+        - tc-squashfs
+        - rootfs-base
+
+sources:
+    - file: ../../scripts/merge-deps.sh
+      packaged: true
+    
+    - file: ../../scripts/pack-rootfs.sh
+      packaged: true
+
+    - file: scripts/startup.sh
+      packaged: true
+
+    - file: scripts/start-funcs.sh
+      packaged: true
+    
+    - file: scripts/functions.sh
+      packaged: true
+
+    - file: init/startup.conf
+      packaged: true
+      
+    - file: init/klogd.conf
+      packaged: true
+
+    - file: init/syslogd.conf
+      packaged: true
+
+    - file: init/network-init.conf
+      packaged: true
+    
+    - file: init/net-if-init.conf
+      packaged: true
+    
+    - file: init/net-if-changed.conf
+      packaged: true
+    
+    - file: scripts/net-if-changed.sh
+      packaged: true
+
+    - file: init/net-port.conf
+      packaged: true
+
+    - file: init/console.conf
+      packaged: true
+
+    - file: init/tty1.conf
+      packaged: true
+    
+    - file: init/tty2.conf
+      packaged: true
+    
+    - file: init/tty3.conf
+      packaged: true
+
+    - file: init/tty4.conf
+      packaged: true
+
+    - file: scripts/terminal.sh
+      packaged: true
+
+    - file: scripts/udhcpc-init.sh
+      packaged: true
+
+    - file: scripts/udhcpc-script.sh
+      packaged: true
+
+    - file: scripts/zcip-script.sh
+      packaged: true
+
+    - file: passwd.txt
+      packaged: true
+    
+    - file: group.txt
+      packaged: true
+      
+    - file: banner.txt
+      packaged: true
+    
+    - file: issue.txt
+      packaged: true
+      
+    - file: profile.txt
+      packaged: true
+
+    - file: bash.bashrc
+      packaged: true
+
+build:
+    - scripts:
+        root.sh: |
+            set -x
+            set -e
+            #
+            # Merge dependencies
+            #
+            $SHELL $_PKGDIR/../../scripts/merge-deps.sh rel
+            tar -C root -xf $_RELBASE/$_DEP_ROOTFS_BASE/rootfs.tar
+            rm -f root/etc/init/*.conf
+            rm -fr root/lib32
+            #
+            # make sure /etc exists
+            #
+            mkdir -p root/etc/config
+            echo >root/etc/config/fstab
+            ln -sf config/fstab root/etc/fstab
+            #
+            # create init script and services
+            #
+            cp -rf $_PKGDIR/init root/etc/
+            cp -rf $_PKGDIR/scripts root/etc/
+            chmod a+rx root/etc/scripts/*.sh
+            chmod a-x root/etc/scripts/functions.sh
+            chmod a-x root/etc/scripts/start-funcs.sh
+            #
+            # other files
+            #
+            cp $_PKGDIR/banner.txt  root/etc/banner
+            cp $_PKGDIR/issue.txt   root/etc/issue
+            cp $_PKGDIR/passwd.txt  root/etc/passwd
+            cp $_PKGDIR/group.txt   root/etc/group
+            cp $_PKGDIR/profile.txt root/etc/profile
+            cp $_PKGDIR/bash.bashrc root/etc/
+            #
+            # place holders
+            #
+            mkdir -p root/etc/scripts/hooks
+            mkdir -p root/etc/bashrc.d
+            #
+            # /var folders and upstart logs
+            #
+            mkdir -p root/var/lib
+            mkdir -p root/var/run
+            mkdir -p root/var/log/upstart
+            #
+            # pack rootfs
+            #
+            $SHELL $_PKGDIR/../../scripts/pack-rootfs.sh
+      commands:
+        - fakeroot $SHELL $_BLDDIR/root.sh        
