@@ -54,7 +54,10 @@ sources:
 
     - file: init/startup.conf
       packaged: true
-      
+
+    - file: init/mdev.conf
+      packaged: true
+
     - file: init/klogd.conf
       packaged: true
 
@@ -91,6 +94,15 @@ sources:
     - file: init/tty4.conf
       packaged: true
 
+    - file: init/ovs-dbserver.conf
+      packaged: true
+
+    - file: init/ovs-dbinit.conf
+      packaged: true
+
+    - file: init/ovs-vswitchd.conf
+      packaged: true
+
     - file: scripts/terminal.sh
       packaged: true
 
@@ -116,6 +128,9 @@ sources:
       packaged: true
       
     - file: profile.txt
+      packaged: true
+
+    - file: modules.txt
       packaged: true
 
     - file: bash.bashrc
@@ -155,6 +170,7 @@ build:
             cp $_PKGDIR/passwd.txt  root/etc/passwd
             cp $_PKGDIR/group.txt   root/etc/group
             cp $_PKGDIR/profile.txt root/etc/profile
+            cp $_PKGDIR/modules.txt root/etc/modules
             cp $_PKGDIR/bash.bashrc root/etc/
             #
             # place holders

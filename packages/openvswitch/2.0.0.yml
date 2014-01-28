@@ -32,4 +32,7 @@ build:
             --with-openssl=$_RELBASE/$_DEP_OPENSSL/dev
         - make
         - make install DESTDIR=$_RELDIR/dev
+        - mkdir -p $_RELDIR/rel/share/openvswitch
+        - cp -f $_RELDIR/dev/share/openvswitch/vswitch.ovsschema $_RELDIR/rel/share/openvswitch/
         - $SHELL $_PKGDIR/../../scripts/relbin.sh bin sbin
+        - $SHELL $_PKGDIR/../../scripts/reldir.sh var

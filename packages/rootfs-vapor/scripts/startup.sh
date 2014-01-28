@@ -31,6 +31,16 @@ detect_hw() {
 	done
 }
 
+load_modules() {
+    if [ -f /etc/modules ]; then
+        grep '^[^#]' /etc/modules |
+            while read module args ; do
+                test "$module" || continue
+                modprobe $module $args || : >/dev/null 2>&1
+            done
+    fi
+}
+
 # mount if not mounted
 if_not_mounted() {
     local mnt="$1"
@@ -41,11 +51,13 @@ if_not_mounted() {
 # normal startup flow (not in container)
 normal_startup() {
     start_parse_kernel_cmdline
-    detect_hw
-    mdev -s
+    echo /sbin/mdev >/proc/sys/kernel/hotplug 2>/dev/null
     mkdir -p /dev/shm
     mount -t tmpfs none /dev/shm
+    detect_hw
     [ -f /sys/class/net/bonding_masters ] || probe_mods bonding max_bonds=0
+    load_modules
+    initctl emit --no-wait mdev-scan
 }
 
 # startup flow in a container
